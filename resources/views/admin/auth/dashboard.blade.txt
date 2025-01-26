@@ -1,0 +1,8 @@
+@extends('admin.includes.master')
+
+@section('admin.content')
+<main class="main">
+  <h1>Welcome to the Admin Dashboard</h1>
+  <p>This is the admin dashboard content.</p>
+</main>
+@endsection
