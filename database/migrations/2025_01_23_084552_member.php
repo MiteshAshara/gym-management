@@ -15,10 +15,11 @@ return new class extends Migration {
             $table->string('name');
             $table->string('image')->nullable();
             $table->string('membership_duration');
+            $table->string('category');
             $table->string('contact_no');
             $table->string('department');
             $table->string('semester');
-            $table->string('fees');
+            $table->decimal('fees', 10, 2); 
             $table->string('payment_mode');
             $table->date('joining_date');
             $table->date('end_date');

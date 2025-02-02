@@ -196,8 +196,8 @@
                     </div>
                   </div>
                   <div class="col-12 text-center">
-                    <p class="m-0 text-secondary">Don't have an account? <br><a href="{{ route('admin.register') }}"
-                        class="link-dark fw-bold text-decoration-none">Sign up</a></p>
+                    <!-- <p class="m-0 text-secondary">Don't have an account? <br><a href="{{ route('admin.register') }}"
+                        class="link-dark fw-bold text-decoration-none">Sign up</a></p> -->
                   </div>
                 </div>
               </form>
@@ -212,15 +212,10 @@
   </section>
 
   <script>
-    // Toggle password visibility using the eye icon
     document.getElementById('togglePassword').addEventListener('click', function () {
       var passwordField = document.getElementById('password');
       var icon = this;
-
-      // Toggle the type of the password field
       passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
-
-      // Toggle the eye icon
       icon.classList.toggle('fa-eye');
       icon.classList.toggle('fa-eye-slash');
     });

@@ -11,21 +11,21 @@ class ReneableController extends Controller
 {
     public function index()
     {
-        $title='Renewable';
-        // Get the current date
-        $currentDate = Carbon::now();
+        $title = "Upcoming Renewable Members";
 
-        // Filter members whose end_date is in the current month or today's date
-        $members = Member::whereMonth('end_date', $currentDate->month)
-            ->orWhereDate('end_date', $currentDate->toDateString())
+        $today = now();
+        $sevenDaysLater = now()->addDays(7);
+
+        $members = Member::whereBetween('end_date', [$today, $sevenDaysLater])
+            ->orderBy('end_date')
             ->get();
 
-        return view('admin.reneable.index', compact('members','title'));
+        return view('admin.reneable.index', compact('title', 'members'));
     }
+
 
     public function update(Request $request, $id)
     {
-        // Validate inputs
         $request->validate([
             'name' => 'required|string|max:255',
             'contact_no' => 'required|string|max:10',
@@ -48,11 +48,10 @@ class ReneableController extends Controller
         $member->joining_date = $request->joining_date;
         $member->end_date = $this->calculateEndDate($request->joining_date, $request->membership_duration);
 
-        // Handle the image upload and rename it with the user's name
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = $request->name . '.' . $image->getClientOriginalExtension(); // Use member's name for image file
-            $imagePath = $image->storeAs('members', $imageName, 'public'); // Store image with new name
+            $imageName = $request->name . '.' . $image->getClientOriginalExtension(); 
+            $imagePath = $image->storeAs('members', $imageName, 'public'); 
             $member->image = $imagePath;
         }
 
@@ -66,7 +65,6 @@ class ReneableController extends Controller
     {
         $joiningDate = Carbon::parse($joiningDate);
 
-        // Calculate end date based on the membership duration
         if ($membershipDuration == '3 months') {
             return $joiningDate->addMonths(3)->format('Y-m-d');
         } elseif ($membershipDuration == '6 months') {
@@ -75,7 +73,6 @@ class ReneableController extends Controller
             return $joiningDate->addYear()->format('Y-m-d');
         }
 
-        // Default return, if no matching duration
         return $joiningDate;
     }
 }

@@ -2,12 +2,11 @@
 
 @section('admin.content')
 <main class="main">
-    <title>Atmiya Wellness</title>
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-3">
                 <div class="col-sm-6">
-                    <span class="text-secondary">Edit Fees For Student</span>
+                    <span class="text-secondary">Edit Fees For Non-Atmiya Staff</span>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -23,10 +22,10 @@
     <div class="container-fluid">
         <div class="card shadow-lg">
             <div class="card-header">
-                <span>Edit Fee For Student</span>
+                <span>Edit Fees For Non-Atmiya Staff</span>
             </div>
             <div class="card-body">
-                <form action="{{ route('fees.update', $fee->id) }}" method="POST">
+                <form action="{{ route('fees.non-atmiya.update', $fee->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -41,7 +40,6 @@
                             @enderror
                         </div>
 
-                        <!-- Fees Amount -->
                         <div class="col-md-12 mb-3">
                             <label for="fees_amount" class="form-label font-weight-bold">Fees Amount</label>
                             <input type="text" name="fees_amount" id="fees_amount" class="form-control shadow-sm"
@@ -61,6 +59,7 @@
                         </button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>

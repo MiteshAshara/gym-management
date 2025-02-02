@@ -5,10 +5,9 @@
     <title>Atmiya Wellness | {{$title}}</title>
     <div class="content-header">
         <div class="container-fluid">
-            <!-- Page Header -->
             <div class="row mb-3">
                 <div class="col-sm-6">
-                    <span class="text-secondary">Fees Management For Student</span>
+                    <span class="text-secondary">Fees Management For Non Atmiya</span>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -21,14 +20,13 @@
             </div>
         </div>
     </div>
-
     <div class="container-fluid">
         <div class="card shadow-lg">
             <div class="card-header">
-                <span class="m-0">Manage Fees For Student</span>
+                <span class="m-0">Manage Fees For Non Atmiya</span>
             </div>
             <div class="card-body">
-                <form action="{{ route('fees.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('fees.non-atmiya.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="col-md-12 mb-3">
                         <label for="membership_duration" class="form-label font-weight-bold">Membership
@@ -62,15 +60,14 @@
             </div>
         </div>
     </div>
-
     <div class="container-fluid">
         <div class="card shadow-lg">
             <div class="card-header">
-                <span class="m-0">View Fees For Student</span>
+                <span class="m-0">View Fees For Non Atmiya</span>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="feesTable" class="table table-bordered text-center">
+                    <table class="table table-bordered mt-4 text-center">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -80,23 +77,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($fee as $f)
+                            @foreach($fees as $fee)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $f->membership_duration }}</td>
-                                    <td>{{ $f->fees_amount }}</td>
+                                    <td>{{ $fee->membership_duration }}</td>
+                                    <td>{{ $fee->fees_amount }}</td>
                                     <td>
-                                        <div class="d-flex justify-content-center">
-                                            <!-- Edit Button -->
-                                            <a href="{{ route('fees.edit', $f->id) }}" class="btn btn-dark btn-sm">Edit</a>
-                                            <form action="{{ route('fees.delete', $f->id) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-dark btn-sm" style="margin-left: 5px;"
-                                                    onclick="return confirm('Are you sure you want to delete this fee?')">Delete</button>
-                                            </form>
-                                        </div>
+                                        <a href="{{ route('fees.non-atmiya.edit', $fee->id) }}"
+                                            class="btn btn-dark btn-sm">Edit</a>
+
+                                        <form action="{{ route('fees.non-atmiya.delete', $fee->id) }}" method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-dark btn-sm"
+                                                onclick="return confirm('Are you sure you want to delete this fee record?')">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
@@ -106,5 +102,6 @@
             </div>
         </div>
     </div>
+
 </main>
 @endsection

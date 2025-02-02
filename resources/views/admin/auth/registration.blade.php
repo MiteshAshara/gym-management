@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Atmiya Wellness |  Registration</title>
+  <title>Atmiya Wellness | Registration</title>
   <link rel="icon" class="bg-white" sizes="64x64" type="image/png" href="{{ asset('admin/dist/img/au-favicon.png') }}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -227,28 +227,18 @@
     </div>
   </section>
   <script>
-    // Toggle password visibility using the eye icon
     document.getElementById('togglePassword').addEventListener('click', function () {
       var passwordField = document.getElementById('password');
       var icon = this;
-
-      // Toggle the type of the password field
       passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
-
-      // Toggle the eye icon
       icon.classList.toggle('fa-eye');
       icon.classList.toggle('fa-eye-slash');
     });
 
-    // Toggle confirm password visibility using the eye icon
     document.getElementById('togglePasswordConfirmation').addEventListener('click', function () {
       var confirmPasswordField = document.getElementById('password_confirmation');
       var icon = this;
-
-      // Toggle the type of the password field
       confirmPasswordField.type = confirmPasswordField.type === 'password' ? 'text' : 'password';
-
-      // Toggle the eye icon
       icon.classList.toggle('fa-eye');
       icon.classList.toggle('fa-eye-slash');
     });

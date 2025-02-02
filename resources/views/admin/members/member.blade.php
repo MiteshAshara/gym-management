@@ -5,7 +5,6 @@
     <title>Atmiya Wellness | {{$title}}</title>
     <div class="content-header">
         <div class="container-fluid">
-            <!-- Page Header -->
             <div class="row mb-3">
                 <div class="col-sm-6">
                     <span class="text-secondary">Members</span>
@@ -22,7 +21,6 @@
         </div>
     </div>
 
-    <!-- Member Form -->
     <div class="container-fluid">
         <div class="card shadow-lg">
             <div class="card-header">
@@ -32,7 +30,6 @@
                 <form action="{{ route('member.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
-                        <!-- Name -->
                         <div class="col-md-6 mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input type="text" name="name" id="name" class="form-control" placeholder="Enter Name"
@@ -42,7 +39,6 @@
                             @enderror
                         </div>
 
-                        <!-- Contact Number -->
                         <div class="col-md-6 mb-3">
                             <label for="contact_no" class="form-label">Contact Number</label>
                             <input type="tel" name="contact_no" id="contact_no" class="form-control"
@@ -54,7 +50,7 @@
                             @enderror
                         </div>
 
-                        <!-- Department -->
+
                         <div class="col-md-6 mb-3">
                             <label for="department" class="form-label">Department</label>
                             <input type="text" name="department" id="department" class="form-control"
@@ -64,7 +60,7 @@
                             @enderror
                         </div>
 
-                        <!-- Semester -->
+
                         <div class="col-md-6 mb-3">
                             <label for="semester" class="form-label">Semester</label>
                             <input type="text" name="semester" id="semester" class="form-control"
@@ -76,21 +72,63 @@
                         </div>
 
 
-                        <!-- Membership Duration -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Member Category</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="category" id="atmiya_student"
+                                        value="atmiya_student" checked>
+                                    <label class="form-check-label" for="atmiya_student">Atmiya Student</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="category" id="atmiya_staff"
+                                        value="atmiya_staff">
+                                    <label class="form-check-label" for="atmiya_staff">Atmiya Staff</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="category" id="non_atmiya_staff"
+                                        value="non_atmiya_staff">
+                                    <label class="form-check-label" for="non_atmiya_staff">Non Atmiya Staff</label>
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="col-md-6 mb-3">
                             <label for="membership_duration" class="form-label">Membership Duration</label>
                             <select name="membership_duration" id="membership_duration" class="form-control">
                                 <option value="" disabled selected>Select Duration</option>
-                                @foreach($fees as $fee)
-                                    <option value="{{ $fee->membership_duration }}">{{ $fee->membership_duration }}</option>
-                                @endforeach
+
+
+                                <optgroup label="Atmiya Student" class="category-group" id="atmiya_student_options">
+                                    @foreach($fees as $fee)
+                                        <option value="{{ $fee->membership_duration }}">{{ $fee->membership_duration }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+
+
+                                <optgroup label="Atmiya Staff" class="category-group d-none" id="atmiya_staff_options">
+                                    @foreach($atmiyaStaffFees as $atmiyaStaffFee)
+                                        <option value="{{ $atmiyaStaffFee->membership_duration }}">
+                                            {{ $atmiyaStaffFee->membership_duration }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+
+
+                                <optgroup label="Non Atmiya Staff" class="category-group d-none"
+                                    id="non_atmiya_staff_options">
+                                    @foreach($nonAtmiyaStaffFees as $nonAtmiyaStaffFee)
+                                        <option value="{{ $nonAtmiyaStaffFee->membership_duration }}">
+                                            {{ $nonAtmiyaStaffFee->membership_duration }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
                             </select>
-                            @error('membership_duration')
-                                <span class="text-dark">{{ $message }}</span>
-                            @enderror
                         </div>
 
-                        <!-- Fees -->
+
                         <div class="col-md-6 mb-3">
                             <label for="fees" class="form-label">Fees</label>
                             <input type="text" name="fees" id="fees" class="form-control"
@@ -98,7 +136,7 @@
                         </div>
 
 
-                        <!-- Payment Mode -->
+
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Payment Mode</label>
                             <div>
@@ -119,7 +157,7 @@
                             @enderror
                         </div>
 
-                        <!-- Profile Image -->
+
                         <div class="col-md-6 mb-3">
                             <label for="image" class="form-label">Profile Image</label>
                             <input type="file" name="image" id="image" class="form-control">
@@ -128,29 +166,31 @@
                             @enderror
                         </div>
 
-                        <!-- Joining Date -->
-                        <div class="col-md-6 mb-3">
-                            <label for="joining_date" class="form-label">Joining Date</label>
-                            <input type="date" name="joining_date" id="joining_date" class="form-control"
-                                value="{{ old('joining_date') }}">
-                            @error('joining_date')
-                                <span class="text-dark">{{ $message }}</span>
-                            @enderror
-                        </div>
 
-                        <!-- End Date -->
-                        <div class="col-md-6 mb-3">
-                            <label for="end_date" class="form-label">End Date</label>
-                            <input type="date" name="end_date" id="end_date" class="form-control"
-                                value="{{ old('end_date') }}" required readonly>
-                            @error('end_date')
-                                <span class="text-dark">{{ $message }}</span>
-                            @enderror
-                        </div>
+                        <div class="col-md-6 mb-3 d-flex flex-row gap-3">
 
+                            <div class="mb-3 w-50">
+                                <label for="joining_date" class="form-label">Joining Date</label>
+                                <input type="date" name="joining_date" id="joining_date" class="form-control"
+                                    value="{{ old('joining_date') }}">
+                                @error('joining_date')
+                                    <span class="text-dark">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+
+                            <div class="mb-3 w-50">
+                                <label for="end_date" class="form-label">End Date</label>
+                                <input type="date" name="end_date" id="end_date" class="form-control"
+                                    value="{{ old('end_date') }}" required readonly>
+                                @error('end_date')
+                                    <span class="text-dark">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Submit Button -->
+
                     <div class="d-flex justify-content-center">
                         <button type="submit"
                             class="btn btn-dark rounded-pill d-grid gap-2 col-6 mx-auto">Submit</button>
@@ -160,19 +200,20 @@
         </div>
     </div>
 
-    <!-- View Members Table -->
+
     <div class="container-fluid mt-5">
         <div class="card shadow-lg">
             <div class="card-header">
                 <span class="m-0">View Members</span>
             </div>
-            <div class="container-fluid mt-5">
+            <div class="container-fluid mt-3">
                 <div class="card shadow-lg">
                     <div class="card-header">
                         <span class="m-0">View Members</span>
+                        <a href="{{ route('members.pdf') }}" class="btn btn-dark float-right">Download PDF</a>
                     </div>
                     <div class="card-body">
-                        <!-- Responsive Table Wrapper -->
+
                         <div class="table-responsive">
                             <table id="membersTable" class="table table-bordered text-center">
                                 <thead>
@@ -185,6 +226,7 @@
                                         <th>Study Semester</th>
                                         <th>Payment Mode</th>
                                         <th>Membership Duration</th>
+                                        <th>Member Category</th>
                                         <th>Fees Amount</th>
                                         <th>Joining Date</th>
                                         <th>Ending Date</th>
@@ -207,10 +249,22 @@
                                             </td>
                                             <td>{{ ucwords($member->name) }}</td>
                                             <td>{{ $member->contact_no }}</td>
+                                            <!-- <td>
+                                                                <a href="https://api.whatsapp.com/send?phone={{ $member->contact_no }}&text=Hello%20{{ ucfirst($member->name) }}%2C%20Your%20subscription%20ends%20on%20{{ date('d-m-Y', strtotime($member->end_date)) }}.%20You%20are%20renewable."
+                                                                    class="hover-link" style="font-weight: 600; color: black;">
+                                                                    {{ $member->contact_no }}
+                                                                </a>
+                                                            </td> -->
                                             <td>{{ ucwords($member->department) }}</td>
                                             <td>{{ $member->semester }}</td>
                                             <td>{{ $member->payment_mode }}</td>
-                                            <td>{{ ucwords($member->membership_duration) }}</td>
+                                            <td>
+                                                {{ ucwords(explode(' ', $member->membership_duration)[0]) }}
+                                                {{ (explode(' ', $member->membership_duration)[0] == 1) ? 'Month' : 'Months' }}
+                                            </td>
+
+                                            <td>{{ ucwords(str_replace(['_'], [' '], $member->category)) }}</td>
+
                                             <td>{{ $member->fees }}</td>
                                             <td style=" white-space: nowrap;">
                                                 {{ date('d-m-Y', strtotime($member->joining_date)) }}
@@ -245,86 +299,105 @@
 </main>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const categoryRadios = document.querySelectorAll('input[name="category"]');
+        const selectBox = document.getElementById("membership_duration");
+        const categoryGroups = {
+            atmiya_student: document.getElementById("atmiya_student_options"),
+            atmiya_staff: document.getElementById("atmiya_staff_options"),
+            non_atmiya_staff: document.getElementById("non_atmiya_staff_options")
+        };
+
+        function updateOptions(selectedCategory) {
+            Object.keys(categoryGroups).forEach(category => {
+                categoryGroups[category].classList.toggle("d-none", category !== selectedCategory);
+            });
+
+            const activeOptions = categoryGroups[selectedCategory].querySelectorAll("option");
+            selectBox.innerHTML = '<option value="" disabled selected>Select Duration</option>';
+            activeOptions.forEach(option => selectBox.appendChild(option.cloneNode(true)));
+        }
+
+        categoryRadios.forEach(radio => {
+            radio.addEventListener("change", function () {
+                updateOptions(this.value);
+                selectBox.selectedIndex = 0;
+            });
+        });
+
+        updateOptions("atmiya_student");
+    });
+
     $(document).ready(function () {
         $('#membersTable').DataTable({
-            "scrollY": "400px",  // Set the fixed height for vertical scrolling
-            "scrollX": true, // Enable horizontal scrolling for wide tables
-            "scrollCollapse": true,  // Allow the table to collapse if there are fewer rows
-            "paging": true,      // Enable pagination
-            "lengthMenu": [10, 25, 50, 100],  // Set options for how many rows to show at once
-            "responsive": true,  // Make the table responsive
+            "scrollY": "400px",
+            "scrollX": true,
+            "scrollCollapse": true,
+            "paging": true,
+            "lengthMenu": [10, 25, 50, 100],
+            "responsive": true,
         });
-    });
-    $(document).ready(function () {
-        var feeData = @json($fees); // Pass fees data to JavaScript
-
+        var feesData = @json($fees);
+        var atmiyaStaffFeesData = @json($atmiyaStaffFees);
+        var nonAtmiyaStaffFeesData = @json($nonAtmiyaStaffFees);
+        var allFees = [...feesData, ...atmiyaStaffFeesData, ...nonAtmiyaStaffFeesData];
         $('#membership_duration').change(function () {
-            var selectedDuration = $(this).val();
-            var feesAmount = '';
+            var selectedDuration = $(this).val(); 
+            var feesAmount = '';  
 
-            // Find the fee that matches the selected duration
-            feeData.forEach(function (fee) {
+            allFees.forEach(function (fee) {
                 if (fee.membership_duration === selectedDuration) {
                     feesAmount = fee.fees_amount;
                 }
             });
 
-            // Update the fees field
-            $('#fees').val(feesAmount);
-        });
-    });
+            if (feesAmount) {
+                $('#fees').val(feesAmount);
+            } else {
 
-    $(document).ready(function () {
-        // Set the current date as the default value for Joining Date
+                $('#fees').val('');
+                alert('No fee found for the selected membership duration.');
+            }
+        });
+
+        
         var currentDate = new Date().toISOString().split('T')[0];
         $('#joining_date').val(currentDate);
 
-        // When the membership duration changes
-        $('#membership_duration').change(function () {
-            var selectedDuration = $(this).val();
+        
+        $('#membership_duration, #joining_date').change(function () {
             var joiningDate = $('#joining_date').val();
+            var selectedDuration = $('#membership_duration').val();
 
-            if (selectedDuration) {
+            if (joiningDate && selectedDuration) {
                 var endDate = calculateEndDate(joiningDate, selectedDuration);
                 $('#end_date').val(endDate);
             }
         });
-    });
 
-    // Function to calculate the end date based on membership duration
-    function calculateEndDate(joiningDate, duration) {
-        var date = new Date(joiningDate);
-        var match = duration.match(/^(\d+)\s*(month|year)s?$/i); // Match patterns like "1 month", "3 years"
+        
+        function calculateEndDate(joiningDate, duration) {
+            var date = new Date(joiningDate);
+            var match = duration.match(/^(\d+)\s*(month|year)s?\s*for\s*(\w+)/i); 
 
-        if (match) {
-            var value = parseInt(match[1], 10); // Extract the numeric value
-            var unit = match[2].toLowerCase(); // Extract the unit (month/year)
+            if (match) {
+                var value = parseInt(match[1], 10); 
+                var unit = match[2].toLowerCase(); 
 
-            if (unit === "month") {
-                date.setMonth(date.getMonth() + value); // Add months
-            } else if (unit === "year") {
-                date.setFullYear(date.getFullYear() + value); // Add years
+                if (unit === "month") {
+                    date.setMonth(date.getMonth() + value); 
+                } else if (unit === "year") {
+                    date.setFullYear(date.getFullYear() + value); 
+                }
+            } else {
+                console.error("Invalid duration: " + duration);
+                return null;
             }
-        } else {
-            console.error("Invalid duration: " + duration);
-            return null;
-        }
 
-        return date.toISOString().split('T')[0]; // Return date in YYYY-MM-DD format
-    }
-
-
-    // Event listener to update the end date when the joining date is changed
-    $('#joining_date').change(function () {
-        var joiningDate = $(this).val();
-        var selectedDuration = $('#membership_duration').val();
-
-        if (joiningDate && selectedDuration) {
-            var endDate = calculateEndDate(joiningDate, selectedDuration);
-            $('#end_date').val(endDate);
+            return date.toISOString().split('T')[0]; 
         }
     });
-
-
 </script>
+
+
 @endsection

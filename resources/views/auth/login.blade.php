@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Atmiya Wellness |  Login</title>
+  <title>Atmiya Wellness | Login</title>
   <link rel="icon" class="bg-white" sizes="64x64" type="image/png" href="{{ asset('admin/dist/img/au-favicon.png') }}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -169,10 +169,10 @@
                       <label for="email">Email Address</label>
                     </div>
                     @error('email')
-                      <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                      </span>
-                    @enderror
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+          @enderror
                   </div>
                   <div class="col-12">
                     <div class="form-floating position-relative">
@@ -180,13 +180,14 @@
                         name="password" id="password" placeholder="Password" required>
                       <label for="password">Password</label>
                       <!-- Eye Icon for Show Password -->
-                      <i id="togglePassword" class="fas fa-eye position-absolute" style="top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></i>
+                      <i id="togglePassword" class="fas fa-eye position-absolute"
+                        style="top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></i>
                     </div>
                     @error('password')
-                      <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                      </span>
-                    @enderror
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+          @enderror
                   </div>
 
                   <div class="col-12">
@@ -195,8 +196,8 @@
                     </div>
                   </div>
                   <div class="col-12 text-center">
-                    <p class="m-0 text-secondary">Don't have an account? <br><a href="{{ route('admin.register') }}"
-                        class="link-dark fw-bold text-decoration-none">Sign up</a></p>
+                    <!-- <p class="m-0 text-secondary">Don't have an account? <br><a href="{{ route('admin.register') }}"
+                        class="link-dark fw-bold text-decoration-none">Sign up</a></p> -->
                   </div>
                 </div>
               </form>
@@ -211,15 +212,10 @@
   </section>
 
   <script>
-    // Toggle password visibility using the eye icon
     document.getElementById('togglePassword').addEventListener('click', function () {
       var passwordField = document.getElementById('password');
       var icon = this;
-
-      // Toggle the type of the password field
       passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
-
-      // Toggle the eye icon
       icon.classList.toggle('fa-eye');
       icon.classList.toggle('fa-eye-slash');
     });

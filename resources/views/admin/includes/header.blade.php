@@ -2,7 +2,7 @@
 
   <!-- Preloader -->
   <div class="preloader flex-column justify-content-center align-items-center">
-    <img src="{{ asset('admin/dist/img/au-logo.png') }}" alt="AdminLTELogo" height="100px" width="auto">
+    <img  src="{{ asset('admin/dist/img/au-logo.png') }}" alt="AdminLTELogo" height="320px" width="auto">
   </div>
 
   <!-- Navbar -->

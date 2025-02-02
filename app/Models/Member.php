@@ -13,6 +13,7 @@ class Member extends Model
         'name',
         'image',
         'membership_duration',
+        'category',
         'contact_no',
         'department',
         'fees',

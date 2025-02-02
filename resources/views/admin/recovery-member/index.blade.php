@@ -2,7 +2,8 @@
 
 @section('admin.content')
 <main class="main">
-    <!-- View Members Table -->
+    <title>Atmiya Wellness | {{$title}}</title>
+
     <div class="container-fluid mt-5">
         <div class="card shadow-lg">
             <div class="card-header">
@@ -13,12 +14,15 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Image</th>
-                            <th>Name</th>
+                            <th>Member Image</th>
+                            <th>Member Name</th>
                             <th>Contact Number</th>
-                            <th>Department</th>
-                            <th>Semester</th>
+                            <th>University Department</th>
+                            <th>Study Semester</th>
                             <th>Payment Mode</th>
+                            <th>Membership Duration</th>
+                            <th>Member Category</th>
+                            <th>Fees Amount</th>
                             <th>Joining Date</th>
                             <th>End Date</th>
                             <th>Actions</th>
@@ -30,20 +34,30 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
                                     @if($member->image)
-                                        <img class="img-thumbnail" src="{{ asset('storage/' . $member->image) }}" alt="Image" width="100" height="auto">
+                                        <img class="img-rounded" style="border-radius: 5px;padding:10px;margin-top: -10px;"
+                                            src="{{ asset('storage/' . $member->image) }}" alt="Image" width="100"
+                                            height="auto">
                                     @else
                                         N/A
                                     @endif
                                 </td>
+
                                 <td>{{ ucwords($member->name) }}</td>
                                 <td>{{ $member->contact_no }}</td>
                                 <td>{{ ucwords($member->department) }}</td>
                                 <td>{{ $member->semester }}</td>
                                 <td>{{ $member->payment_mode }}</td>
-                                <td>{{ date('d-m-Y', strtotime($member->joining_date)) }}</td>
-                                <td>{{ date('d-m-Y', strtotime($member->end_date)) }}</td>
+                                <td>{{ ucwords($member->membership_duration) }}</td>
+                                <td>{{ ucwords($member->category) }}</td>
+                                <td>{{ $member->fees }}</td>
+                                <td style="white-space: nowrap;">{{ date('d-m-Y', strtotime($member->joining_date)) }}</td>
+                                <td style="white-space: nowrap;">{{ date('d-m-Y', strtotime($member->end_date)) }}</td>
                                 <td>
-                                    <a href="{{ route('member') }}" class="btn btn-dark">Recover</a>
+                                    <form action="{{ route('recover.member', $member->id) }}" method="POST"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        <button type="submit" class="btn btn-dark">Recover</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
@@ -54,12 +68,11 @@
     </div>
 </main>
 
-<!-- Include DataTables Script -->
 @push('scripts')
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#membersTable').DataTable({
                 responsive: true,
                 paging: true,

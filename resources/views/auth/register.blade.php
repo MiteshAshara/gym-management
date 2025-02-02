@@ -227,28 +227,18 @@
     </div>
   </section>
   <script>
-    // Toggle password visibility using the eye icon
     document.getElementById('togglePassword').addEventListener('click', function () {
       var passwordField = document.getElementById('password');
       var icon = this;
-
-      // Toggle the type of the password field
       passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
-
-      // Toggle the eye icon
       icon.classList.toggle('fa-eye');
       icon.classList.toggle('fa-eye-slash');
     });
 
-    // Toggle confirm password visibility using the eye icon
     document.getElementById('togglePasswordConfirmation').addEventListener('click', function () {
       var confirmPasswordField = document.getElementById('password_confirmation');
       var icon = this;
-
-      // Toggle the type of the password field
       confirmPasswordField.type = confirmPasswordField.type === 'password' ? 'text' : 'password';
-
-      // Toggle the eye icon
       icon.classList.toggle('fa-eye');
       icon.classList.toggle('fa-eye-slash');
     });

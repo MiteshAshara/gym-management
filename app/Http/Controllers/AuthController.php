@@ -23,23 +23,19 @@ class AuthController extends Controller
 
     public function postLogin(Request $request)
     {
-        // Validate the incoming request
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // Attempt to authenticate the user with the provided credentials
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            // If authentication is successful, redirect to the admin dashboard
             return redirect()->route('admin.dashboard');
         }
 
-        // If authentication fails, redirect back to the login page with an error message
         return redirect()->route('admin.login')
-            ->withInput() // Keeps the email value input
+            ->withInput() 
             ->withErrors(['email' => 'Oops! You have entered invalid credentials']);
     }
 
@@ -81,24 +77,20 @@ class AuthController extends Controller
     }
     public function dashboard()
     {
-        $title="Dashbaord";
-        // Total members count
+        $title = "Dashboard";
         $totalMembers = Member::count();
-
-        // Count of "Upcoming Reneable" members (end_date is this month or today)
         $currentDate = Carbon::now();
-        $upcomingReneableCount = Member::whereMonth('end_date', $currentDate->month)
-            ->orWhereDate('end_date', $currentDate->toDateString())
+        $oneWeekFromNow = $currentDate->copy()->addDays(7);
+        $upcomingReneableCount = Member::whereBetween('end_date', [$currentDate->toDateString(), $oneWeekFromNow->toDateString()])
             ->count();
-
-        // Return view with both counts
-        return view('admin.index', compact('totalMembers', 'upcomingReneableCount','title'));
+        return view('admin.index', compact('totalMembers', 'upcomingReneableCount', 'title'));
     }
+    
 
     public function logout()
     {
         Session::flush();
         Auth::logout();
-        return redirect()->route('admin.login');
+        return redirect()->route('/');
     }
 }
