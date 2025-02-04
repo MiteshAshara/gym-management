@@ -1,3 +1,3 @@
-<footer class="main-footer bg-secondary">            
-            <p class="fw-bold text-center">Copyright &copy; 2024 Atmiya Wellness Center <br>All Rights Reserved
+<footer class="main-footer bg-light">            
+            <p class="fw-bold text-center">Copyright &copy; 2025 Atmiya Wellness Center All Rights Reserved
 </footer>

@@ -180,8 +180,8 @@
                             @enderror
                         </div>
 
-                        <div class="col-md-6 mb-3 d-flex gap-3">
-                                <div class="w-50">
+                            <div class="col-md-6 mb-3 d-flex gap-3">
+                                <div class="flex-grow-1">
                                     <label for="joining_date" class="form-label">Joining Date</label>
                                     <input type="date" name="joining_date" id="joining_date" class="form-control"
                                         value="{{ old('joining_date', $member->joining_date) }}">
@@ -189,22 +189,25 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-
-                                <div class="w-50">
-                                    <label for="end_date" class="form-label">End Date</label>
+                            
+                                <div class="flex-grow-1">
+                                    <label for="end_date" class="form-label">End Date</label>   
                                     <input type="date" name="end_date" id="end_date" class="form-control"
                                         value="{{ old('end_date', $member->end_date) }}" readonly>
                                     @error('end_date')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
+                            
+                                <div class="flex-grow-1">
+                                    <label for="renewal_date" class="form-label">Renewal Date</label>
+                                    <input type="text" id="renewal_date" class="form-control" readonly>
+                                </div>
                             </div>
-
                     </div>
-
                     <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-dark rounded-pill d-grid gap-2 col-6 mx-auto">
-                            Update Member
+                            Renew Member
                         </button>
                     </div>
                 </form>
@@ -212,124 +215,123 @@
         </div>
     </div>
 </main>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const categoryRadios = document.querySelectorAll('input[name="category"]');
-        const selectBox = document.getElementById("membership_duration");
-        const feesInput = document.getElementById("fees");
-        const categoryGroups = {
-            atmiya_student: document.getElementById("atmiya_student_options"),
-            atmiya_staff: document.getElementById("atmiya_staff_options"),
-            non_atmiya_staff: document.getElementById("non_atmiya_staff_options")
-        };
+    const categoryRadios = document.querySelectorAll('input[name="category"]');
+    const membershipDuration = document.getElementById("membership_duration");
+    const joiningDateInput = document.getElementById("joining_date");
+    const endDateInput = document.getElementById("end_date");
+    const renewalDateInput = document.getElementById("renewal_date");
+    const feesInput = document.getElementById("fees");
 
-        var oldCategory = "{{ old('category', $member->category ?? '') }}";
-        var oldMembershipDuration = "{{ old('membership_duration', $member->membership_duration ?? '') }}";
-        var oldFees = "{{ old('fees', $member->fees ?? '') }}";
+    const categoryGroups = {
+        atmiya_student: document.getElementById("atmiya_student_options"),
+        atmiya_staff: document.getElementById("atmiya_staff_options"),
+        non_atmiya_staff: document.getElementById("non_atmiya_staff_options")
+    };
 
-        function updateOptions(selectedCategory) {
-            Object.keys(categoryGroups).forEach(category => {
-                categoryGroups[category].classList.toggle("d-none", category !== selectedCategory);
-            });
+    var oldCategory = "{{ old('category', $member->category ?? '') }}";
+    var oldMembershipDuration = "{{ old('membership_duration', $member->membership_duration ?? '') }}";
+    var oldFees = "{{ old('fees', $member->fees ?? '') }}";
 
-            const activeOptions = categoryGroups[selectedCategory].querySelectorAll("option");
-            selectBox.innerHTML = '<option value="" disabled>Select Duration</option>';
-            activeOptions.forEach(option => {
-                selectBox.appendChild(option.cloneNode(true));
-            });
-
-            if (oldMembershipDuration) {
-                selectBox.value = oldMembershipDuration;
-            }
-
-            feesInput.value = '';
-        }
-        categoryRadios.forEach(radio => {
-            if (radio.value === oldCategory) {
-                radio.checked = true;
-                updateOptions(oldCategory);
-            }
-
-            radio.addEventListener("change", function () {
-                updateOptions(this.value);
-                selectBox.selectedIndex = 0;
-            });
+    function updateOptions(selectedCategory) {
+        Object.keys(categoryGroups).forEach(category => {
+            categoryGroups[category].classList.toggle("d-none", category !== selectedCategory);
         });
 
-        $(document).ready(function () {
-            $('#membersTable').DataTable({
-                "scrollY": "400px",
-                "scrollX": true,
-                "scrollCollapse": true,
-                "paging": true,
-                "lengthMenu": [10, 25, 50, 100],
-                "responsive": true,
-            });
+        const activeOptions = categoryGroups[selectedCategory]?.querySelectorAll("option") || [];
+        membershipDuration.innerHTML = '<option value=""  selected>Select Duration</option>';
+        activeOptions.forEach(option => membershipDuration.appendChild(option.cloneNode(true)));
 
-            var feesData = @json($fees);
-            var atmiyaStaffFeesData = @json($atmiyaStaffFees);
-            var nonAtmiyaStaffFeesData = @json($nonAtmiyaStaffFees);
-            var allFees = [...feesData, ...atmiyaStaffFeesData, ...nonAtmiyaStaffFeesData];
+        feesInput.value = '';
+        renewalDateInput.value = '';
+        membershipDuration.selectedIndex = 0;
+    }
 
-            $('#membership_duration').change(function () {
-                var selectedDuration = $(this).val();
-                var feesAmount = '';
-
-                allFees.forEach(function (fee) {
-                    if (fee.membership_duration === selectedDuration) {
-                        feesAmount = fee.fees_amount;
-                    }
-                });
-
-                if (feesAmount) {
-                    $('#fees').val(feesAmount);
-                } else {
-                    $('#fees').val('');
-                    alert('No fee found for the selected membership duration.');
-                }
-            });
-
-            var currentDate = new Date().toISOString().split('T')[0];
-            $('#joining_date').val(currentDate);
-
-            $('#membership_duration, #joining_date').change(function () {
-                var joiningDate = $('#joining_date').val();
-                var selectedDuration = $('#membership_duration').val();
-
-                if (joiningDate && selectedDuration) {
-                    var endDate = calculateEndDate(joiningDate, selectedDuration);
-                    $('#end_date').val(endDate);
-                }
-            });
-
-            function calculateEndDate(joiningDate, duration) {
-                var date = new Date(joiningDate);
-                var match = duration.match(/^(\d+)\s*(month|year)s?\s*for\s*(\w+)/i);
-
-                if (match) {
-                    var value = parseInt(match[1], 10);
-                    var unit = match[2].toLowerCase();
-
-                    if (unit === "month") {
-                        date.setMonth(date.getMonth() + value);
-                    } else if (unit === "year") {
-                        date.setFullYear(date.getFullYear() + value);
-                    }
-                } else {
-                    console.error("Invalid duration: " + duration);
-                    return null;
-                }
-
-                return date.toISOString().split('T')[0];
-            }
-
-            if (oldFees) {
-                $('#fees').val(oldFees);
-            }
+    categoryRadios.forEach(radio => {
+        if (radio.value === oldCategory) {
+            radio.checked = true;
+            updateOptions(oldCategory);
+        }
+        radio.addEventListener("change", function () {
+            updateOptions(this.value);
         });
     });
+
+    var feesData = @json($fees);
+    var atmiyaStaffFeesData = @json($atmiyaStaffFees);
+    var nonAtmiyaStaffFeesData = @json($nonAtmiyaStaffFees);
+    var allFees = [...feesData, ...atmiyaStaffFeesData, ...nonAtmiyaStaffFeesData];
+
+    function updateFees() {
+        let selectedDuration = membershipDuration.value;
+        let feesAmount = allFees.find(fee => fee.membership_duration === selectedDuration)?.fees_amount || '';
+
+        feesInput.value = feesAmount;
+        if (!feesAmount && selectedDuration) {
+            alert('No fee found for the selected membership duration.');
+        }
+    }
+
+    function calculateDate(startDate, duration) {
+        let date = new Date(startDate);
+        let match = duration.match(/^([0-9]+)\s*(month|year)s?/i);
+
+        if (match) {
+            let value = parseInt(match[1], 10);
+            let unit = match[2].toLowerCase();
+
+            if (unit === "month") {
+                date.setMonth(date.getMonth() + value);
+            } else if (unit === "year") {
+                date.setFullYear(date.getFullYear() + value);
+            }
+        }
+        return date.toISOString().split('T')[0];
+    }
+
+    function updateRenewalDate() {
+    let selectedDuration = membershipDuration.value;
+    let endDate = endDateInput.value;
+
+    if (endDate && selectedDuration) {
+        let renewalDate = calculateDate(endDate, selectedDuration);
+        renewalDateInput.value = renewalDate;
+        endDateInput.value = renewalDate; 
+    }
+}
+
+
+    if (oldMembershipDuration) {
+        membershipDuration.value = oldMembershipDuration;
+        updateFees();
+    }
+    if (oldFees) {
+        feesInput.value = oldFees;
+    }
+
+    joiningDateInput.value = new Date().toISOString().split('T')[0];
+
+    membershipDuration.addEventListener("change", function () {
+        updateFees();
+        updateRenewalDate();
+    });
+
+    endDateInput.addEventListener("change", function () {
+        updateRenewalDate();
+    });
+
+    $(document).ready(function () {
+        $('#membersTable').DataTable({
+            "scrollY": "400px",
+            "scrollX": true,
+            "scrollCollapse": true,
+            "paging": true,
+            "lengthMenu": [10, 25, 50, 100],
+            "responsive": true,
+        });
+    });
+});
+
 </script>
-
-
 @endsection

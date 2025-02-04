@@ -18,7 +18,7 @@
     
     <!-- Centered Text -->
     <div class="navbar-nav mx-auto">
-      <span class="navbar-text text-secondary">
+      <span class="navbar-text text-dark fw-bold">
         Atmiya Wellness Center
       </span>
     </div>

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Fees;
 use App\Models\Member;
 use Illuminate\Http\Request;
-use Carbon\Carbon;  // Add this import
+use Carbon\Carbon;
+use App\Models\AtmiyaStaffFee;
+use App\Models\NonAtmiyaStaffFee;
 
 class ReneableController extends Controller
 {
@@ -23,6 +25,15 @@ class ReneableController extends Controller
         return view('admin.reneable.index', compact('title', 'members'));
     }
 
+    public function edit($id)
+    {
+        $member = Member::findOrFail($id);
+        $fees = Fees::all();
+        $atmiyaStaffFees = AtmiyaStaffFee::all();
+        $nonAtmiyaStaffFees = NonAtmiyaStaffFee::all();
+
+        return view('admin.reneable.edit', compact('member', 'fees', 'atmiyaStaffFees', 'nonAtmiyaStaffFees'));
+    }
 
     public function update(Request $request, $id)
     {
@@ -34,11 +45,11 @@ class ReneableController extends Controller
             'membership_duration' => 'required|string',
             'payment_mode' => 'required|string',
             'joining_date' => 'required|date',
-            'end_date' => 'required|date',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'renewal_date' => 'required|date', 
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:8048'
         ]);
 
-        $member = Member::find($id);
+        $member = Member::findOrFail($id);
         $member->name = $request->name;
         $member->contact_no = $request->contact_no;
         $member->department = $request->department;
@@ -46,33 +57,18 @@ class ReneableController extends Controller
         $member->membership_duration = $request->membership_duration;
         $member->payment_mode = $request->payment_mode;
         $member->joining_date = $request->joining_date;
-        $member->end_date = $this->calculateEndDate($request->joining_date, $request->membership_duration);
+
+        $member->end_date = $request->renewal_date;
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = $request->name . '.' . $image->getClientOriginalExtension(); 
-            $imagePath = $image->storeAs('members', $imageName, 'public'); 
+            $imageName = $request->name . '.' . $image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('members', $imageName, 'public');
             $member->image = $imagePath;
         }
 
         $member->save();
 
-        return redirect()->route('members.index')->with('success', 'Member updated successfully');
-    }
-
-
-    private function calculateEndDate($joiningDate, $membershipDuration)
-    {
-        $joiningDate = Carbon::parse($joiningDate);
-
-        if ($membershipDuration == '3 months') {
-            return $joiningDate->addMonths(3)->format('Y-m-d');
-        } elseif ($membershipDuration == '6 months') {
-            return $joiningDate->addMonths(6)->format('Y-m-d');
-        } elseif ($membershipDuration == '1 year') {
-            return $joiningDate->addYear()->format('Y-m-d');
-        }
-
-        return $joiningDate;
+        return redirect()->route('admin.reneable.index')->with('success', 'Member renewed successfully with updated end date.');
     }
 }

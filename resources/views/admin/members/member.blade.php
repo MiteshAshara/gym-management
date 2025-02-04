@@ -1,6 +1,16 @@
 @extends('admin.includes.master')
 
 @section('admin.content')
+<style>
+    .form-check-input {
+        border: 2px solid black;
+
+    }
+
+    .form-check-input:checked {
+        border: 2px solid black;
+    }
+</style>
 <main class="main">
     <title>Atmiya Wellness | {{$title}}</title>
     <div class="content-header">
@@ -77,27 +87,32 @@
                             <div class="d-flex gap-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="category" id="atmiya_student"
-                                        value="atmiya_student" checked>
+                                        value="atmiya_student" checked {{ old('category') == 'atmiya_student' ? 'checked' : '' }}
+                                        required>
                                     <label class="form-check-label" for="atmiya_student">Atmiya Student</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="category" id="atmiya_staff"
-                                        value="atmiya_staff">
+                                        value="atmiya_staff" {{ old('category') == 'atmiya_staff' ? 'checked' : '' }}
+                                        required>
                                     <label class="form-check-label" for="atmiya_staff">Atmiya Staff</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="category" id="non_atmiya_staff"
-                                        value="non_atmiya_staff">
+                                        value="non_atmiya_staff" {{ old('category') == 'non_atmiya_staff' ? 'checked' : '' }} required>
                                     <label class="form-check-label" for="non_atmiya_staff">Non Atmiya Staff</label>
                                 </div>
                             </div>
+                            @error('category')
+                                <span class="text-dark">{{ $message }}</span>
+                            @enderror
                         </div>
 
 
                         <div class="col-md-6 mb-3">
                             <label for="membership_duration" class="form-label">Membership Duration</label>
                             <select name="membership_duration" id="membership_duration" class="form-control">
-                                <option value="" disabled selected>Select Duration</option>
+                                <option value="" disabled selected required>Select Duration</option>
 
 
                                 <optgroup label="Atmiya Student" class="category-group" id="atmiya_student_options">
@@ -130,9 +145,9 @@
 
 
                         <div class="col-md-6 mb-3">
-                            <label for="fees" class="form-label">Fees</label>
-                            <input type="text" name="fees" id="fees" class="form-control"
-                                placeholder="Select Membership Duration For fees" readonly>
+                            <label for="fees" class="form-label">Fees Amount</label>
+                            <input type="text" name="fees" id="fees" class="form-control" placeholder="Membership Fees"
+                                readonly>
                         </div>
 
 
@@ -142,24 +157,24 @@
                             <div>
                                 <div class="form-check form-check-inline">
                                     <input type="radio" name="payment_mode" id="payment_cash" value="Cash Payment"
-                                        class="form-check-input" checked {{ old('payment_mode') == 'Cash' ? 'checked' : '' }}>
+                                        class="form-check-input custom-dark-radio" {{ old('payment_mode') == 'Cash Payment' ? 'checked' : '' }} required>
                                     <label for="payment_cash" class="form-check-label">Cash Payment</label>
                                 </div>
 
                                 <div class="form-check form-check-inline">
                                     <input type="radio" name="payment_mode" id="payment_online" value="Online Payment"
-                                        class="form-check-input" {{ old('payment_mode') == 'Online' ? 'checked' : '' }}>
-                                    <label for="payment_online" class="form-check-label">Online Payment</label>
+                                        class="form-check-input custom-dark-radio" {{ old('payment_mode') == 'Online Payment' ? 'checked' : '' }} required>
+                                    <label for="payment_online" class="form-check-label">Online
+                                        Payment</label>
                                 </div>
                             </div>
                             @error('payment_mode')
-                                <span class="text-dark">{{ $message }}</span>
+                                <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
-
                         <div class="col-md-6 mb-3">
-                            <label for="image" class="form-label">Profile Image</label>
+                            <label for="image" class="form-label">Member Image</label>
                             <input type="file" name="image" id="image" class="form-control">
                             @error('image')
                                 <span class="text-dark">{{ $message }}</span>
@@ -250,11 +265,11 @@
                                             <td>{{ ucwords($member->name) }}</td>
                                             <td>{{ $member->contact_no }}</td>
                                             <!-- <td>
-                                                                <a href="https://api.whatsapp.com/send?phone={{ $member->contact_no }}&text=Hello%20{{ ucfirst($member->name) }}%2C%20Your%20subscription%20ends%20on%20{{ date('d-m-Y', strtotime($member->end_date)) }}.%20You%20are%20renewable."
-                                                                    class="hover-link" style="font-weight: 600; color: black;">
-                                                                    {{ $member->contact_no }}
-                                                                </a>
-                                                            </td> -->
+                                                                                                <a href="https://api.whatsapp.com/send?phone={{ $member->contact_no }}&text=Hello%20{{ ucfirst($member->name) }}%2C%20Your%20subscription%20ends%20on%20{{ date('d-m-Y', strtotime($member->end_date)) }}.%20You%20are%20renewable."
+                                                                                                    class="hover-link" style="font-weight: 600; color: black;">
+                                                                                                    {{ $member->contact_no }}
+                                                                                                </a>
+                                                                                            </td> -->
                                             <td>{{ ucwords($member->department) }}</td>
                                             <td>{{ $member->semester }}</td>
                                             <td>{{ $member->payment_mode }}</td>
@@ -302,6 +317,8 @@
     document.addEventListener("DOMContentLoaded", function () {
         const categoryRadios = document.querySelectorAll('input[name="category"]');
         const selectBox = document.getElementById("membership_duration");
+        const feesInput = document.getElementById("fees");
+        const endDateInput = document.getElementById("end_date"); 
         const categoryGroups = {
             atmiya_student: document.getElementById("atmiya_student_options"),
             atmiya_staff: document.getElementById("atmiya_staff_options"),
@@ -316,8 +333,10 @@
             const activeOptions = categoryGroups[selectedCategory].querySelectorAll("option");
             selectBox.innerHTML = '<option value="" disabled selected>Select Duration</option>';
             activeOptions.forEach(option => selectBox.appendChild(option.cloneNode(true)));
-        }
+            feesInput.value = '';
 
+            endDateInput.value = '';
+        }
         categoryRadios.forEach(radio => {
             radio.addEventListener("change", function () {
                 updateOptions(this.value);
@@ -337,13 +356,15 @@
             "lengthMenu": [10, 25, 50, 100],
             "responsive": true,
         });
+
         var feesData = @json($fees);
         var atmiyaStaffFeesData = @json($atmiyaStaffFees);
         var nonAtmiyaStaffFeesData = @json($nonAtmiyaStaffFees);
         var allFees = [...feesData, ...atmiyaStaffFeesData, ...nonAtmiyaStaffFeesData];
+
         $('#membership_duration').change(function () {
-            var selectedDuration = $(this).val(); 
-            var feesAmount = '';  
+            var selectedDuration = $(this).val();
+            var feesAmount = '';
 
             allFees.forEach(function (fee) {
                 if (fee.membership_duration === selectedDuration) {
@@ -354,17 +375,14 @@
             if (feesAmount) {
                 $('#fees').val(feesAmount);
             } else {
-
                 $('#fees').val('');
                 alert('No fee found for the selected membership duration.');
             }
         });
 
-        
         var currentDate = new Date().toISOString().split('T')[0];
         $('#joining_date').val(currentDate);
 
-        
         $('#membership_duration, #joining_date').change(function () {
             var joiningDate = $('#joining_date').val();
             var selectedDuration = $('#membership_duration').val();
@@ -375,29 +393,27 @@
             }
         });
 
-        
         function calculateEndDate(joiningDate, duration) {
             var date = new Date(joiningDate);
-            var match = duration.match(/^(\d+)\s*(month|year)s?\s*for\s*(\w+)/i); 
+            var match = duration.match(/^(\d+)\s*(month|year)s?\s*for\s*(\w+)/i);
 
             if (match) {
-                var value = parseInt(match[1], 10); 
-                var unit = match[2].toLowerCase(); 
+                var value = parseInt(match[1], 10);
+                var unit = match[2].toLowerCase();
 
                 if (unit === "month") {
-                    date.setMonth(date.getMonth() + value); 
+                    date.setMonth(date.getMonth() + value);
                 } else if (unit === "year") {
-                    date.setFullYear(date.getFullYear() + value); 
+                    date.setFullYear(date.getFullYear() + value);
                 }
             } else {
                 console.error("Invalid duration: " + duration);
                 return null;
             }
 
-            return date.toISOString().split('T')[0]; 
+            return date.toISOString().split('T')[0];
         }
     });
 </script>
-
 
 @endsection

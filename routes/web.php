@@ -58,11 +58,14 @@ Route::prefix('atmiya-admin')->group(function () {
 
         //Renewable
         Route::get('/reneable', [ReneableController::class, 'index'])->name('reneable');
+        Route::get('/renew/{id}', [ReneableController::class, 'edit'])->name('reneable.edit');
+        Route::post('/update/{id}', [ReneableController::class, 'update'])->name('reneable.update');
         Route::get('/members/pdf', [MemberController::class, 'exportPDF'])->name('members.pdf');
 
         // recovery member
         // Route::get('/recover-member', [RecoverMember::class, 'index'])->name('recovery.member');
         // Route::post('/recover-member/{id}', [RecoverMember::class, 'recover'])->name('recover.member');
+
         //     <li class="nav-item">
         //     <a class="nav-link {{ request()->routeIs('recovery.member') ? 'active' : '' }} fas fa-undo-alt"
         //     href="{{ route('recovery.member') }}">

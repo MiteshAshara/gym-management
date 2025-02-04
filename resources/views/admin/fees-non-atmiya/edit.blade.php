@@ -2,6 +2,7 @@
 
 @section('admin.content')
 <main class="main">
+    <title>Atmiya Wellness</title>
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-3">

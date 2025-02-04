@@ -65,7 +65,6 @@
         </ul>
       </li>
 
-
       <li class="nav-item {{ request()->routeIs('member') || request()->routeIs('reneable') ? 'menu-open' : '' }}">
         <a href="#"
         class="nav-link {{ request()->routeIs('member') || request()->routeIs('reneable') ? 'active' : '' }}">
@@ -77,11 +76,13 @@
         <ul class="nav nav-treeview">
         <li class="nav-item">
           <a href="{{ route('member') }}" class="nav-link {{ request()->routeIs('member') ? 'active' : '' }}">
-          <p>All Members</p>
+          <i class="fas fa-user-plus"></i>
+          <p>Add Members</p>
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ route('reneable') }}" class="nav-link {{ request()->routeIs('reneable') ? 'active' : '' }}">
+          <i class="fas fa-calendar-alt"></i>
           <p>Upcoming Renewables</p>
           </a>
         </li>

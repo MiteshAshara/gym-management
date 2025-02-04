@@ -2,6 +2,7 @@
 
 @section('admin.content')
 <main class="main">
+    <title>Atmiya Wellness</title>
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-3">
@@ -28,7 +29,7 @@
                 <form action="{{ route('fees.staff.update', $fee->id) }}" method="POST">
                     @csrf
                     @method('PUT') 
-                    <div class="row">                       
+                    <div class="row">
                         <div class="col-md-12 mb-3">
                             <label for="membership_duration" class="form-label font-weight-bold">Membership
                                 Duration</label>

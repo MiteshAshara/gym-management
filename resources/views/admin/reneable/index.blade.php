@@ -86,11 +86,12 @@
                                     <td>{{ $member->semester }}</td>
                                     <td>{{ $member->payment_mode }}</td>
                                     <td>
-                                        {{ ucwords(explode(' ', $member->membership_duration)[0]) }}
-                                        {{ (explode(' ', $member->membership_duration)[0] == 1) ? 'Month' : 'Months' }}
-                                    </td>
+                                                {{ ucwords(explode(' ', $member->membership_duration)[0]) }}
+                                                {{ (explode(' ', $member->membership_duration)[0] == 1) ? 'Month' : 'Months' }}
+                                            </td>
 
-                                    <td>{{ ucwords(str_replace(['_', 'staff'], [' ', ''], $member->category)) }}</td>
+                                            <td>{{ ucwords(str_replace(['_'], [' '], $member->category)) }}</td>
+
                                     <td>{{ $member->fees }}</td>
                                     <td style=" white-space: nowrap;">{{ date('d-m-Y', strtotime($member->joining_date)) }}
                                     </td>
@@ -104,7 +105,7 @@
                                                 onclick="return confirm('Are you sure you want to delete this member?')">Delete</button>
                                         </form> -->
                                         <div class="d-flex justify-content-center">
-                                            <a href="javascript:void(0);" class="btn btn-dark btn-sm viewMember"
+                                            <!-- <a href="javascript:void(0);" class="btn btn-dark btn-sm viewMember"
                                                 data-id="{{ $member->id }}" data-name="{{ $member->name }}"
                                                 data-contact="{{ $member->contact_no }}"
                                                 data-department="{{ $member->department }}"
@@ -116,11 +117,11 @@
                                                 data-ending="{{ date('d-m-Y', strtotime($member->end_date)) }}"
                                                 data-image="{{ asset('storage/' . $member->image) }}">
                                                 View
-                                            </a>
+                                            </a> -->
                                             <!-- <a href="{{ route('members.edit', $member->id) }}"
                                                             class="btn btn-dark btn-sm"  style="margin-left: 5px;">Edit</a> -->
 
-                                            <a href="{{ route('members.edit', $member->id) }}"
+                                            <a href="{{ route('reneable.edit', $member->id) }}"
                                                 class="btn btn-success btn-sm" style="margin-left: 5px;">Renew</a>
                                         </div>
                                     </td>

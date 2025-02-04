@@ -43,13 +43,6 @@
             background-color: #fff;
         }
 
-        img {
-            width: auto;
-            height: 80px;
-            object-fit: cover;
-            border: 2px solid #ddd;
-        }
-
         .heading {
             color: #007BFF;
             text-decoration: underline;
@@ -117,14 +110,25 @@
             img {
                 max-width: 100px;
             }
+
+            body {
+                margin-left: 5mm;
+                margin-right: 80mm;
+            }
+
+            .table-container {
+                margin-left: auto;
+                margin-right: auto;
+            }
         }
     </style>
+
 </head>
 
 <body>
 
     <div class="header">
-        <h2>Members List</h2>
+        <h2>Atmiya Wellness<br>Members List</h2>
     </div>
 
     <div class="table-container">
@@ -138,8 +142,8 @@
                     <th>University Department</th>
                     <th>Study Semester</th>
                     <th>Payment Mode</th>
-                    <th>Member Category</th>
                     <th>Membership Duration</th>
+                    <th>Member Category</th>
                     <th>Fees Amount</th>
                     <th>Joining Date</th>
                     <th>Ending Date</th>
@@ -147,30 +151,45 @@
             </thead>
             <tbody>
                 @foreach($members as $index => $member)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>
-                            @if($member->image)
-                                <img src="{{ storage_path('app/public/' . $member->image) }}" alt="Member Image">
-                            @else
-                                No Image
-                            @endif
-                        </td>
-                        <td>{{ ucwords($member->name) }}</td>
-                        <td>{{ $member->contact_no }}</td>
-                        <td>{{ ucwords($member->department) }}</td>
-                        <td>{{ $member->semester }}</td>
-                        <td>{{ $member->payment_mode }}</td>
-                        <td>
-                            {{ ucwords(explode(' ', $member->membership_duration)[0]) }}
-                            {{ (explode(' ', $member->membership_duration)[0] == 1) ? 'Month' : 'Months' }}
-                        </td>
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>
+                                    @if($member->image)
+                                                        @php
+                                                            $path = storage_path('app/public/' . $member->image);
+                                                            if (file_exists($path)) {
+                                                                $type = pathinfo($path, PATHINFO_EXTENSION);
+                                                                $data = file_get_contents($path);
+                                                                $imageData = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                                                            } else {
+                                                                $imageData = '';
+                                                            }
+                                                        @endphp
 
-                        <td>{{ ucwords(str_replace(['_', 'staff'], [' ', ''], $member->category)) }}</td>
-                        <td>{{ number_format($member->fees, 2) }}</td>
-                        <td style="white-space: nowrap;">{{ date('d-m-Y', strtotime($member->joining_date)) }}</td>
-                        <td style="white-space: nowrap;">{{ date('d-m-Y', strtotime($member->end_date)) }}</td>
-                    </tr>
+                                                        @if($imageData)
+                                                            <img src="{{ $imageData }}" alt="Member Image" style="width:85px; height:auto;">
+                                                        @else
+                                                            No Image
+                                                        @endif
+                                    @else
+                                        No Image
+                                    @endif
+                                </td>
+                                <td>{{ ucwords($member->name) }}</td>
+                                <td>{{ $member->contact_no }}</td>
+                                <td>{{ ucwords($member->department) }}</td>
+                                <td>{{ $member->semester }}</td>
+                                <td>{{ $member->payment_mode }}</td>
+                                <td>
+                                    {{ ucwords(explode(' ', $member->membership_duration)[0]) }}
+                                    {{ (explode(' ', $member->membership_duration)[0] == 1) ? 'Month' : 'Months' }}
+                                </td>
+
+                                <td>{{ ucwords(str_replace(['_'], [' '], $member->category)) }}</td>
+                                <td>{{ $member->fees }}</td>
+                                <td style="white-space: nowrap;">{{ date('d-m-Y', strtotime($member->joining_date)) }}</td>
+                                <td style="white-space: nowrap;">{{ date('d-m-Y', strtotime($member->end_date)) }}</td>
+                            </tr>
                 @endforeach
             </tbody>
         </table>
