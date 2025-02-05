@@ -111,7 +111,6 @@
                             <select name="membership_duration" id="membership_duration" class="form-control">
                                 <option value="" disabled {{ old('membership_duration', isset($member) ? $member->membership_duration : '') == '' ? 'selected' : '' }}>Select Duration</option>
 
-                                <!-- Atmiya Student Categories -->
                                 <optgroup label="Atmiya Student" id="atmiya_student_options">
                                     @foreach($fees as $fee)
                                         <option value="{{ $fee->membership_duration }}"
