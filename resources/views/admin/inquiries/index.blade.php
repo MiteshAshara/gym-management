@@ -41,37 +41,68 @@
                         <div class="col-md-6 mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input type="text" name="name" id="name" class="form-control" placeholder="Enter Name" required>
+                            @error('name')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" name="email" id="email" class="form-control" placeholder="Enter Email" required>
+                            @error('email')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="mobile" class="form-label">Mobile</label>
                             <input type="text" name="mobile" id="mobile" class="form-control" placeholder="Enter Mobile" required>
+                            @error('mobile')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="gender" class="form-label">Gender</label>
-                            <select name="gender" id="gender" class="form-control" required>
+                            <select name="gender" id="gender" class="form-control" required onchange="updateStatusOptions()">
+                                <option value="">Select Gender</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                             </select>
+                            @error('gender')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="age" class="form-label">Age</label>
-                            <input type="number" name="age" id="age" class="form-control" placeholder="Enter Age" required>
+                            <input type="number" name="age" id="age" class="form-control" placeholder="Enter Age" min="1" max="120" required>
+                            @error('age')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="birth_date" class="form-label">Birth Date</label>
+                            <input type="date" name="birth_date" id="birth_date" class="form-control" required>
+                            @error('birth_date')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="height_in_inches" class="form-label">Height (in inches)</label>
                             <input type="number" name="height_in_inches" id="height_in_inches" class="form-control" placeholder="Enter Height" required>
+                            @error('height_in_inches')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="weight" class="form-label">Weight</label>
                             <input type="number" name="weight" id="weight" class="form-control" placeholder="Enter Weight" required>
+                            @error('weight')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="status" class="form-label">Status</label>
-                            <input type="text" id="status" class="form-control" value="Pending" disabled>
+                            <label for="current_status" class="form-label">Current Status</label>
+                            <select name="current_status" id="current_status" class="form-control" required>
+                                <option value="">Select Status</option>
+                                <!-- Options will be filled by JavaScript -->
+                            </select>
+                            @error('current_status')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="reference" class="form-label">Reference</label>
+                            <input type="text" name="reference" id="reference" class="form-control" placeholder="How did they hear about us?">
+                            @error('reference')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="medical_conditions" class="form-label">Medical Conditions</label>
+                            <textarea name="medical_conditions" id="medical_conditions" class="form-control" rows="3" placeholder="Any medical conditions or health issues"></textarea>
+                            @error('medical_conditions')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="status_display" class="form-label">Inquiry Status</label>
+                            <input type="text" id="status_display" class="form-control" value="Pending" disabled>
                             <input type="hidden" name="status" value="pending">
                         </div>
                     </div>
@@ -94,16 +125,20 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Inquiry<br>Date</th>
-                                <th>Inquire<br>Name</th>
-                                <th>Inquire<br>Email</th>
-                                <th>Mobile<br>Number</th>
-                                <th>Inquire<br>Gender</th>
-                                <th>Inquire<br>Age</th>
-                                <th>Inquire<br>Height (in inches)</th>
-                                <th>Inquire<br>Weight (kg)</th>
-                                <th>Inquire<br>Status</th>
-                                <th>Inquiry<br>Actions</th>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th>Birth Date</th>
+                                <th>Height</th>
+                                <th>Weight</th>
+                                <th>Current Status</th>
+                                <th>Reference</th>
+                                <th>Medical Info</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -116,9 +151,14 @@
                                 <td>{{ $inquiry->mobile }}</td>
                                 <td>{{ ucfirst($inquiry->gender) }}</td>
                                 <td>{{ $inquiry->age }}</td>
+                                <td>{{ $inquiry->birth_date ? \Carbon\Carbon::parse($inquiry->birth_date)->format('d-m-Y') : 'N/A' }}</td>
                                 <td>{{ $inquiry->height_in_inches }}</td>
                                 <td>{{ $inquiry->weight }}</td>
+                                <td>{{ ucfirst($inquiry->current_status ?? 'N/A') }}</td>
+                                <td>{{ $inquiry->reference ?? 'N/A' }}</td>
+                                <td>{{ Str::limit($inquiry->medical_conditions, 30) ?? 'N/A' }}</td>
                                 <td>
+                                    <!-- Replace the existing status cell content with this dropdown UI -->
                                     @php
                                         $isMember = \App\Models\Member::where('contact_no', $inquiry->mobile)->exists();
                                         
@@ -127,20 +167,35 @@
                                             $inquiry->status = 'hot';
                                             $inquiry->save();
                                         }
-                                        // If member doesn't exist and status is 'hot', set back to 'pending'
-                                        elseif(!$isMember && $inquiry->status == 'hot') {
-                                            $inquiry->status = 'pending';
-                                            $inquiry->save();
-                                        }
                                     @endphp
                                     
-                                    @if($inquiry->status == 'hot')
-                                        <span class="badge badge-danger">Hot</span>
-                                    @elseif($inquiry->status == 'cold')
-                                        <span class="badge badge-success">Cold</span>
-                                    @else
-                                        <span class="badge badge-secondary">Pending</span>
-                                    @endif
+                                    <div class="status-container" data-inquiry-id="{{ $inquiry->id }}">
+                                        <div class="d-flex align-items-center">
+                                            <div class="status-badge me-2">
+                                                @if($inquiry->status == 'hot')
+                                                    <span class="badge badge-danger status-label">Hot</span>
+                                                @elseif($inquiry->status == 'cold')
+                                                    <span class="badge badge-success status-label">Cold</span>
+                                                @else
+                                                    <span class="badge badge-secondary status-label">Pending</span>
+                                                @endif
+                                            </div>
+                                            
+                                            <div class="dropdown">
+                                                <div class="dropdown-menu" aria-labelledby="statusDropdown{{ $inquiry->id }}">
+                                                    <a class="dropdown-item status-change" href="#" data-status="hot" data-inquiry-id="{{ $inquiry->id }}" data-inquiry-name="{{ $inquiry->name }}">
+                                                        <span class="badge badge-danger">Hot</span>
+                                                    </a>
+                                                    <a class="dropdown-item status-change" href="#" data-status="cold" data-inquiry-id="{{ $inquiry->id }}" data-inquiry-name="{{ $inquiry->name }}">
+                                                        <span class="badge badge-success">Cold</span>
+                                                    </a>
+                                                    <a class="dropdown-item status-change" href="#" data-status="pending" data-inquiry-id="{{ $inquiry->id }}" data-inquiry-name="{{ $inquiry->name }}">
+                                                        <span class="badge badge-secondary">Pending</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Actions">
@@ -252,7 +307,7 @@
             var icon = button.find('i');
             var currentStatus = button.hasClass('btn-success') ? 'cold' : 'pending';
             var newStatus = currentStatus === 'cold' ? 'pending' : 'cold';
-            var statusCell = form.closest('tr').find('td:nth-child(10)').find('span');
+            var statusCell = form.closest('tr').find('td:nth-child(14)').find('span');
             
             toastr.info('Updating ' + inquiryName + ' to ' + newStatus + ' status...');
             
@@ -261,8 +316,6 @@
                 type: 'POST',
                 data: form.serialize(),
                 success: function(response) {
-                    
-                    
                     // Update button appearance
                     if (newStatus === 'pending') {
                         button.removeClass('btn-success').addClass('btn-secondary');
@@ -280,12 +333,91 @@
             });
         });
         
+        // Handle status change with dropdown
+        $('.status-change').on('click', function(e) {
+            e.preventDefault();
+            
+            var statusLink = $(this);
+            var inquiryId = statusLink.data('inquiry-id');
+            var inquiryName = statusLink.data('inquiry-name');
+            var newStatus = statusLink.data('status');
+            var statusContainer = $('.status-container[data-inquiry-id="' + inquiryId + '"]');
+            var statusLabel = statusContainer.find('.status-label');
+            
+            toastr.info('Updating ' + inquiryName + ' to ' + newStatus + ' status...');
+            
+            $.ajax({
+                url: "{{ route('inquiries.change-status', '') }}/" + inquiryId,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    status: newStatus
+                },
+                success: function(response) {
+                    toastr.success(inquiryName + ' status changed to ' + newStatus + ' successfully.');
+                    
+                    // Update badge appearance
+                    statusLabel.removeClass('badge-danger badge-success badge-secondary');
+                    
+                    if (newStatus === 'hot') {
+                        statusLabel.addClass('badge-danger').text('Hot');
+                    } else if (newStatus === 'cold') {
+                        statusLabel.addClass('badge-success').text('Cold');
+                    } else {
+                        statusLabel.addClass('badge-secondary').text('Pending');
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error('Error updating status: ' + xhr.responseText);
+                }
+            });
+        });
+        
         // Convert to member - Store in localStorage to show toast on member page
         $('.convert-member-btn').on('click', function() {
             var inquiryName = $(this).data('inquiry-name');
             toastr.info('Converting ' + inquiryName + ' to member.');
             localStorage.setItem('convertingInquiry', inquiryName);
         });
+    });
+    
+    // Function to update status options based on gender
+    function updateStatusOptions() {
+        const gender = document.getElementById('gender').value;
+        const statusSelect = document.getElementById('current_status');
+        
+        // Clear existing options except the first one
+        while (statusSelect.options.length > 1) {
+            statusSelect.remove(1);
+        }
+        
+        // Add appropriate options based on gender
+        if (gender === 'male') {
+            const maleOptions = ['Student', 'Business', 'Service/Job', 'Self-employed', 'Retired', 'Other'];
+            maleOptions.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option.toLowerCase();
+                opt.textContent = option;
+                statusSelect.add(opt);
+            });
+        } else if (gender === 'female') {
+            const femaleOptions = ['Student', 'Housewife', 'Service/Job', 'Business', 'Self-employed', 'Retired', 'Other'];
+            femaleOptions.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option.toLowerCase();
+                opt.textContent = option;
+                statusSelect.add(opt);
+            });
+        }
+    }
+    
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        const genderSelect = document.getElementById('gender');
+        if (genderSelect) {
+            genderSelect.addEventListener('change', updateStatusOptions);
+            updateStatusOptions();
+        }
     });
 </script>
 @endsection

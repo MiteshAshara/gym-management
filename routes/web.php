@@ -79,6 +79,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/inquiries/{id}/to-member', [MemberController::class, 'createFromInquiry'])->name('inquiries.to-member');
         Route::patch('/inquiries/{id}/set-cold', [InquiryController::class, 'setCold'])->name('inquiries.set-cold');
         Route::patch('/inquiries/{id}/toggle-cold', [InquiryController::class, 'toggleCold'])->name('inquiries.toggle-cold');
+        Route::post('inquiries/{id}/change-status', [InquiryController::class, 'changeStatus'])->name('inquiries.change-status');
 
         // recovery member
         Route::get('/recover-member', [RecoverMember::class, 'index'])->name('recovery.member');

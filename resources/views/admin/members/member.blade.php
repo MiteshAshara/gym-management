@@ -265,6 +265,7 @@
                                 <th>Membership Duration</th>
                                 <th>Member Category</th>
                                 <th>Fees Amount</th>
+                                <th>Medical information</th>
                                 <th>Joining Date</th>
                                 <th>Ending Date</th>
                                 <th>Actions</th>
@@ -296,6 +297,7 @@
                                 </td>
                                 <td>{{ $member->category == 'atmiya_student' ? 'Male' : ($member->category == 'atmiya_staff' ? 'Female' : 'Other') }}</td>
                                 <td>{{ $member->fees }}</td>
+                                <td>{{ $member->medical_conditions ?? 'N/A' }}</td>
                                 <td style="white-space: nowrap;">
                                     {{ date('d-m-Y', strtotime($member->joining_date)) }}
                                 </td>

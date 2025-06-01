@@ -4,7 +4,6 @@
 <style>
     .form-check-input {
         border: 2px solid black;
-
     }
 
     .form-check-input:checked {
@@ -61,26 +60,88 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="age" class="form-label">Age</label>
+                            <input type="number" name="age" id="age" class="form-control" placeholder="Enter Age"
+                                value="{{ old('age', $member->age) }}" min="1" max="120">
+                            @error('age')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
 
+                        <div class="col-md-6 mb-3">
+                            <label for="birth_date" class="form-label">Birth Date</label>
+                            <input type="date" name="birth_date" id="birth_date" class="form-control"
+                                value="{{ old('birth_date', $member->birth_date) }}">
+                            @error('birth_date')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
 
+                        <div class="col-md-6 mb-3">
+                            <label for="height_in_inches" class="form-label">Height (in inches)</label>
+                            <input type="number" name="height_in_inches" id="height_in_inches" class="form-control"
+                                placeholder="Enter Height" value="{{ old('height_in_inches', $member->height_in_inches) }}">
+                            @error('height_in_inches')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="weight" class="form-label">Weight</label>
+                            <input type="number" name="weight" id="weight" class="form-control" placeholder="Enter Weight"
+                                value="{{ old('weight', $member->weight) }}">
+                            @error('weight')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="current_status" class="form-label">Current Status</label>
+                            <input type="text" name="current_status" id="current_status" class="form-control" 
+                                placeholder="Member's current status" value="{{ old('current_status', $member->current_status) }}">
+                            @error('current_status')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="reference" class="form-label">Reference</label>
+                            <input type="text" name="reference" id="reference" class="form-control" 
+                                placeholder="Reference information" value="{{ old('reference', $member->reference) }}">
+                            @error('reference')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        
+                        <div class="col-md-12 mb-3">
+                            <label for="medical_conditions" class="form-label">Medical Conditions</label>
+                            <textarea name="medical_conditions" id="medical_conditions" class="form-control" rows="3" 
+                                placeholder="Any medical conditions">{{ old('medical_conditions', $member->medical_conditions) }}</textarea>
+                            @error('medical_conditions')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Member Category</label>
                             <div class="d-flex gap-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="category" id="atmiya_student"
-                                        value="atmiya_student" checked {{ old('category') == 'atmiya_student' ? 'checked' : '' }}
+                                        value="atmiya_student" {{ old('category', $member->category) == 'atmiya_student' ? 'checked' : '' }}
                                         required>
                                     <label class="form-check-label" for="atmiya_student">Male Fees</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="category" id="atmiya_staff"
-                                        value="atmiya_staff" {{ old('category') == 'atmiya_staff' ? 'checked' : '' }}
+                                        value="atmiya_staff" {{ old('category', $member->category) == 'atmiya_staff' ? 'checked' : '' }}
                                         required>
                                     <label class="form-check-label" for="atmiya_staff">Female Fees</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="category" id="non_atmiya_staff"
-                                        value="non_atmiya_staff" {{ old('category') == 'non_atmiya_staff' ? 'checked' : '' }} required>
+                                        value="non_atmiya_staff" {{ old('category', $member->category) == 'non_atmiya_staff' ? 'checked' : '' }} required>
                                     <label class="form-check-label" for="non_atmiya_staff">Others Fees</label>
                                 </div>
                             </div>
@@ -92,13 +153,13 @@
                         <div class="col-md-6 mb-3">
                             <label for="membership_duration" class="form-label">Membership Duration</label>
                             <select name="membership_duration" id="membership_duration" class="form-control">
-                                <option value="" disabled {{ old('membership_duration', isset($member) ? $member->membership_duration : '') == '' ? 'selected' : '' }}>Select Duration</option>
+                                <option value="" disabled {{ old('membership_duration', $member->membership_duration) == '' ? 'selected' : '' }}>Select Duration</option>
 
                                 <!-- Atmiya Student Categories -->
                                 <optgroup label="Atmiya Student" id="atmiya_student_options">
                                     @foreach($fees as $fee)
                                         <option value="{{ $fee->membership_duration }}"
-                                            {{ old('membership_duration', isset($member) ? $member->membership_duration : '') == $fee->membership_duration ? 'selected' : '' }}>
+                                            {{ old('membership_duration', $member->membership_duration) == $fee->membership_duration ? 'selected' : '' }}>
                                             {{ $fee->membership_duration }}
                                         </option>
                                     @endforeach
@@ -107,7 +168,7 @@
                                 <optgroup label="Atmiya Staff" class="d-none" id="atmiya_staff_options">
                                     @foreach($atmiyaStaffFees as $atmiyaStaffFee)
                                         <option value="{{ $atmiyaStaffFee->membership_duration }}"
-                                            {{ old('membership_duration', isset($member) ? $member->membership_duration : '') == $atmiyaStaffFee->membership_duration ? 'selected' : '' }}>
+                                            {{ old('membership_duration', $member->membership_duration) == $atmiyaStaffFee->membership_duration ? 'selected' : '' }}>
                                             {{ $atmiyaStaffFee->membership_duration }}
                                         </option>
                                     @endforeach
@@ -116,7 +177,7 @@
                                 <optgroup label="Non Atmiya Staff" class="d-none" id="non_atmiya_staff_options">
                                     @foreach($nonAtmiyaStaffFees as $nonAtmiyaStaffFee)
                                         <option value="{{ $nonAtmiyaStaffFee->membership_duration }}"
-                                            {{ old('membership_duration', isset($member) ? $member->membership_duration : '') == $nonAtmiyaStaffFee->membership_duration ? 'selected' : '' }}>
+                                            {{ old('membership_duration', $member->membership_duration) == $nonAtmiyaStaffFee->membership_duration ? 'selected' : '' }}>
                                             {{ $nonAtmiyaStaffFee->membership_duration }}
                                         </option>
                                     @endforeach
@@ -164,25 +225,24 @@
                         </div>
 
                         <div class="col-md-6 mb-3 d-flex gap-3">
-                                <div class="w-50">
-                                    <label for="joining_date" class="form-label">Joining Date</label>
-                                    <input type="date" name="joining_date" id="joining_date" class="form-control"
-                                        value="{{ old('joining_date', $member->joining_date) }}">
-                                    @error('joining_date')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="w-50">
-                                    <label for="end_date" class="form-label">End Date</label>
-                                    <input type="date" name="end_date" id="end_date" class="form-control"
-                                        value="{{ old('end_date', $member->end_date) }}" readonly>
-                                    @error('end_date')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                            <div class="w-50">
+                                <label for="joining_date" class="form-label">Joining Date</label>
+                                <input type="date" name="joining_date" id="joining_date" class="form-control"
+                                    value="{{ old('joining_date', $member->joining_date) }}">
+                                @error('joining_date')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
 
+                            <div class="w-50">
+                                <label for="end_date" class="form-label">End Date</label>
+                                <input type="date" name="end_date" id="end_date" class="form-control"
+                                    value="{{ old('end_date', $member->end_date) }}" readonly>
+                                @error('end_date')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
 
                     <div class="d-flex justify-content-center">
@@ -211,6 +271,15 @@
         var oldMembershipDuration = "{{ old('membership_duration', $member->membership_duration ?? '') }}";
         var oldFees = "{{ old('fees', $member->fees ?? '') }}";
 
+        // Initialize values for new fields if they exist
+        var oldAge = "{{ old('age', $member->age ?? '') }}";
+        var oldBirthDate = "{{ old('birth_date', $member->birth_date ?? '') }}";
+        var oldHeightInInches = "{{ old('height_in_inches', $member->height_in_inches ?? '') }}";
+        var oldWeight = "{{ old('weight', $member->weight ?? '') }}";
+        var oldCurrentStatus = "{{ old('current_status', $member->current_status ?? '') }}";
+        var oldReference = "{{ old('reference', $member->reference ?? '') }}";
+        var oldMedicalConditions = "{{ old('medical_conditions', $member->medical_conditions ?? '') }}";
+
         function updateOptions(selectedCategory) {
             Object.keys(categoryGroups).forEach(category => {
                 categoryGroups[category].classList.toggle("d-none", category !== selectedCategory);
@@ -228,6 +297,7 @@
 
             feesInput.value = '';
         }
+        
         categoryRadios.forEach(radio => {
             if (radio.value === oldCategory) {
                 radio.checked = true;
@@ -273,9 +343,6 @@
                 }
             });
 
-            var currentDate = new Date().toISOString().split('T')[0];
-            $('#joining_date').val(currentDate);
-
             $('#membership_duration, #joining_date').change(function () {
                 var joiningDate = $('#joining_date').val();
                 var selectedDuration = $('#membership_duration').val();
@@ -310,9 +377,16 @@
             if (oldFees) {
                 $('#fees').val(oldFees);
             }
+            
+            // Fill in the fields if they have values
+            if (oldAge) document.getElementById('age').value = oldAge;
+            if (oldBirthDate) document.getElementById('birth_date').value = oldBirthDate;
+            if (oldHeightInInches) document.getElementById('height_in_inches').value = oldHeightInInches;
+            if (oldWeight) document.getElementById('weight').value = oldWeight;
+            if (oldCurrentStatus) document.getElementById('current_status').value = oldCurrentStatus;
+            if (oldReference) document.getElementById('reference').value = oldReference;
+            if (oldMedicalConditions) document.getElementById('medical_conditions').value = oldMedicalConditions;
         });
     });
 </script>
-
-
 @endsection

@@ -128,4 +128,28 @@ class InquiryController extends Controller
         
         return redirect()->route('inquiries')->with('success', 'Inquiry status updated successfully');
     }
+
+    /**
+     * Change inquiry status to any status
+     */
+    public function changeStatus($id, Request $request)
+    {
+        $request->validate([
+            'status' => 'required|in:hot,cold,pending',
+        ]);
+        
+        $inquiry = Inquiry::findOrFail($id);
+        $inquiry->status = $request->status;
+        $inquiry->save();
+        
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true, 
+                'message' => 'Status updated successfully', 
+                'status' => $inquiry->status
+            ]);
+        }
+        
+        return redirect()->route('inquiries')->with('success', 'Inquiry status updated successfully');
+    }
 }
