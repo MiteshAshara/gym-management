@@ -12,7 +12,7 @@
     }
 </style>    
 <main class="main">
-<title>Atmiya Wellness</title>
+<title>Fitness Gym | {{$title}}</title>
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-3">
@@ -62,48 +62,31 @@
                             @enderror
                         </div>
 
-                        <div class="col-md-6 mb-3">
-                            <label for="department" class="form-label">Department</label>
-                            <input type="text" name="department" id="department" class="form-control"
-                                placeholder="Enter Department" value="{{ old('department', $member->department) }}">
-                            @error('department')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label for="semester" class="form-label">Semester</label>
-                            <input type="text" name="semester" id="semester" class="form-control"
-                                placeholder="Enter Semester" placeholder="Enter Semester" maxlength="3"
-                                pattern="^[0-9]{1,3}$" oninput="this.value = this.value.replace(/[^\d]/g, '')"
-                                value="{{ old('semester', $member->semester) }}">
-                            @error('semester')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Member Category</label>
                             <div class="d-flex gap-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="category" id="atmiya_student"
-                                        value="atmiya_student"
-                                        {{ old('category', isset($member) ? $member->category : '') == 'atmiya_student' ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="atmiya_student">Atmiya Student</label>
+                                        value="atmiya_student" checked {{ old('category') == 'atmiya_student' ? 'checked' : '' }}
+                                        required>
+                                    <label class="form-check-label" for="atmiya_student">Male Fees</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="category" id="atmiya_staff"
-                                        value="atmiya_staff"
-                                        {{ old('category', isset($member) ? $member->category : '') == 'atmiya_staff' ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="atmiya_staff">Atmiya Staff</label>
+                                        value="atmiya_staff" {{ old('category') == 'atmiya_staff' ? 'checked' : '' }}
+                                        required>
+                                    <label class="form-check-label" for="atmiya_staff">Female Fees</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="category" id="non_atmiya_staff"
-                                        value="non_atmiya_staff"
-                                        {{ old('category', isset($member) ? $member->category : '') == 'non_atmiya_staff' ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="non_atmiya_staff">Non Atmiya Staff</label>
+                                        value="non_atmiya_staff" {{ old('category') == 'non_atmiya_staff' ? 'checked' : '' }} required>
+                                    <label class="form-check-label" for="non_atmiya_staff">Others Fees</label>
                                 </div>
                             </div>
+                            @error('category')
+                                <span class="text-dark">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -172,7 +155,7 @@
                             <label for="image" class="form-label">Member Image</label>
                             <input type="file" name="image" id="image" class="form-control">
                             @if($member->image)
-                                <img src="{{ asset('storage/' . $member->image) }}" alt="Profile Image"
+                                <img src="{{ asset($member->image) }}" alt="Profile Image"
                                     class="img-thumbnail mt-2" width="100">
                             @endif
                             @error('image')

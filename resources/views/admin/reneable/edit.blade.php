@@ -10,21 +10,26 @@
     .form-check-input:checked {
         border: 2px solid black;
     }
+    
+    /* Fix for default option display */
+    select option.default-option {
+        display: block !important;
+    }
 </style>    
 <main class="main">
-<title>Atmiya Wellness</title>
+<title>Fitness Gym | {{$title}}</title>
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-3">
                 <div class="col-sm-6">
-                    <span class="text-secondary">Edit Members</span>
+                    <span class="text-secondary">Renew Members</span>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item">
                             <a class="text-secondary" href="{{ route('admin.dashboard') }}">home</a>
                         </li>
-                        <li class="breadcrumb-item active">edit-members</li>
+                        <li class="breadcrumb-item active">renew-members</li>
                     </ol>
                 </div>
             </div>
@@ -34,7 +39,7 @@
     <div class="container-fluid">
         <div class="card shadow-lg">
             <div class="card-header">
-                <h5>Edit Member</h5>
+                <h5>Renew Member</h5>
             </div>
             <div class="card-body">
                 <form action="{{ route('member.update', $member->id) }}" method="POST" enctype="multipart/form-data">
@@ -63,76 +68,62 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label for="department" class="form-label">Department</label>
-                            <input type="text" name="department" id="department" class="form-control"
-                                placeholder="Enter Department" value="{{ old('department', $member->department) }}">
-                            @error('department')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label for="semester" class="form-label">Semester</label>
-                            <input type="text" name="semester" id="semester" class="form-control"
-                                placeholder="Enter Semester" placeholder="Enter Semester" maxlength="3"
-                                pattern="^[0-9]{1,3}$" oninput="this.value = this.value.replace(/[^\d]/g, '')"
-                                value="{{ old('semester', $member->semester) }}">
-                            @error('semester')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6 mb-3">
                             <label class="form-label">Member Category</label>
                             <div class="d-flex gap-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="category" id="atmiya_student"
-                                        value="atmiya_student"
-                                        {{ old('category', isset($member) ? $member->category : '') == 'atmiya_student' ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="atmiya_student">Atmiya Student</label>
+                                        value="atmiya_student" 
+                                        {{ old('category', $member->category ?? 'atmiya_student') == 'atmiya_student' ? 'checked' : '' }}
+                                        required>
+                                    <label class="form-check-label" for="atmiya_student">General Membership</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="category" id="atmiya_staff"
-                                        value="atmiya_staff"
-                                        {{ old('category', isset($member) ? $member->category : '') == 'atmiya_staff' ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="atmiya_staff">Atmiya Staff</label>
+                                        value="atmiya_staff" {{ old('category', $member->category ?? '') == 'atmiya_staff' ? 'checked' : '' }}
+                                        required>
+                                    <label class="form-check-label" for="atmiya_staff">General Membership + Aerobic / Zomba</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="category" id="non_atmiya_staff"
-                                        value="non_atmiya_staff"
-                                        {{ old('category', isset($member) ? $member->category : '') == 'non_atmiya_staff' ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="non_atmiya_staff">Non Atmiya Staff</label>
+                                        value="non_atmiya_staff" {{ old('category', $member->category ?? '') == 'non_atmiya_staff' ? 'checked' : '' }} required>
+                                    <label class="form-check-label" for="non_atmiya_staff">Personal Training</label>
                                 </div>
                             </div>
+                            @error('category')
+                                <span class="text-dark">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label for="membership_duration" class="form-label">Membership Duration</label>
-                            <select name="membership_duration" id="membership_duration" class="form-control">
-                                <option value="" disabled {{ old('membership_duration', isset($member) ? $member->membership_duration : '') == '' ? 'selected' : '' }}>Select Duration</option>
-
-                                <optgroup label="Atmiya Student" id="atmiya_student_options">
+                            <select name="membership_duration" id="membership_duration" class="form-control" required>
+                                <option value="" class="default-option" style="display: block !important;">Select Duration</option>
+                                <!-- Category-specific duration options -->
+                                <optgroup label="General Membership" id="optgroup_atmiya_student">
                                     @foreach($fees as $fee)
-                                        <option value="{{ $fee->membership_duration }}"
-                                            {{ old('membership_duration', isset($member) ? $member->membership_duration : '') == $fee->membership_duration ? 'selected' : '' }}>
+                                        <option value="{{ $fee->membership_duration }}" data-category="atmiya_student"
+                                            {{ old('membership_duration', $member->membership_duration ?? '') == $fee->membership_duration ? 'selected' : '' }} 
+                                            class="category-option atmiya_student-option">
                                             {{ $fee->membership_duration }}
                                         </option>
                                     @endforeach
                                 </optgroup>
 
-                                <optgroup label="Atmiya Staff" class="d-none" id="atmiya_staff_options">
+                                <optgroup label="General Membership + Aerobic / Zomba" id="optgroup_atmiya_staff" style="display:none;">
                                     @foreach($atmiyaStaffFees as $atmiyaStaffFee)
-                                        <option value="{{ $atmiyaStaffFee->membership_duration }}"
-                                            {{ old('membership_duration', isset($member) ? $member->membership_duration : '') == $atmiyaStaffFee->membership_duration ? 'selected' : '' }}>
+                                        <option value="{{ $atmiyaStaffFee->membership_duration }}" data-category="atmiya_staff"
+                                            {{ old('membership_duration', $member->membership_duration ?? '') == $atmiyaStaffFee->membership_duration ? 'selected' : '' }} 
+                                            class="category-option atmiya_staff-option">
                                             {{ $atmiyaStaffFee->membership_duration }}
                                         </option>
                                     @endforeach
                                 </optgroup>
 
-                                <optgroup label="Non Atmiya Staff" class="d-none" id="non_atmiya_staff_options">
+                                <optgroup label="Personal Training" id="optgroup_non_atmiya_staff" style="display:none;">
                                     @foreach($nonAtmiyaStaffFees as $nonAtmiyaStaffFee)
-                                        <option value="{{ $nonAtmiyaStaffFee->membership_duration }}"
-                                            {{ old('membership_duration', isset($member) ? $member->membership_duration : '') == $nonAtmiyaStaffFee->membership_duration ? 'selected' : '' }}>
+                                        <option value="{{ $nonAtmiyaStaffFee->membership_duration }}" data-category="non_atmiya_staff"
+                                            {{ old('membership_duration', $member->membership_duration ?? '') == $nonAtmiyaStaffFee->membership_duration ? 'selected' : '' }} 
+                                            class="category-option non_atmiya_staff-option">
                                             {{ $nonAtmiyaStaffFee->membership_duration }}
                                         </option>
                                     @endforeach
@@ -143,7 +134,7 @@
                         <div class="col-md-6 mb-3">
                             <label for="fees" class="form-label">Fees Amount</label>
                             <input type="text" name="fees" id="fees" class="form-control"
-                                placeholder="Select a duration to view fee" readonly
+                                placeholder="Select Membership Duration" readonly
                                 value="{{ old('fees', $member->fees) }}">
                         </div>
 
@@ -171,7 +162,7 @@
                             <label for="image" class="form-label">Member Image</label>
                             <input type="file" name="image" id="image" class="form-control">
                             @if($member->image)
-                                <img src="{{ asset('storage/' . $member->image) }}" alt="Profile Image"
+                                <img src="{{ asset($member->image) }}" alt="Profile Image"
                                     class="img-thumbnail mt-2" width="100">
                             @endif
                             @error('image')
@@ -179,30 +170,29 @@
                             @enderror
                         </div>
 
-                            <div class="col-md-6 mb-3 d-flex gap-3">
-                                <div class="flex-grow-1">
-                                    <label for="joining_date" class="form-label">Joining Date</label>
-                                    <input type="date" name="joining_date" id="joining_date" class="form-control"
-                                        value="{{ old('joining_date', $member->joining_date) }}">
-                                    @error('joining_date')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            
-                                <div class="flex-grow-1">
-                                    <label for="end_date" class="form-label">End Date</label>   
-                                    <input type="date" name="end_date" id="end_date" class="form-control"
-                                        value="{{ old('end_date', $member->end_date) }}" readonly>
-                                    @error('end_date')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            
-                                <div class="flex-grow-1">
-                                    <label for="renewal_date" class="form-label">Renewal Date</label>
-                                    <input type="text" id="renewal_date" class="form-control" readonly>
-                                </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4 mb-3">
+                                <label for="joining_date" class="form-label">Joining Date</label>
+                                <input type="date" name="joining_date" id="joining_date" class="form-control"
+                                    value="{{ old('joining_date', $member->joining_date) }}">
+                                @error('joining_date')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="end_date" class="form-label">Current End Date</label>
+                                <input type="date" id="current_end_date" class="form-control"
+                                    value="{{ $member->end_date }}" readonly>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="renewal_date" class="form-label">Renewal End Date</label>
+                                <input type="date" name="end_date" id="end_date" class="form-control"
+                                    value="{{ old('end_date') }}" readonly>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-dark rounded-pill d-grid gap-2 col-6 mx-auto">
@@ -220,43 +210,125 @@
     const membershipDuration = document.getElementById("membership_duration");
     const joiningDateInput = document.getElementById("joining_date");
     const endDateInput = document.getElementById("end_date");
-    const renewalDateInput = document.getElementById("renewal_date");
     const feesInput = document.getElementById("fees");
-
-    const categoryGroups = {
-        atmiya_student: document.getElementById("atmiya_student_options"),
-        atmiya_staff: document.getElementById("atmiya_staff_options"),
-        non_atmiya_staff: document.getElementById("non_atmiya_staff_options")
-    };
-
+    
     var oldCategory = "{{ old('category', $member->category ?? '') }}";
     var oldMembershipDuration = "{{ old('membership_duration', $member->membership_duration ?? '') }}";
     var oldFees = "{{ old('fees', $member->fees ?? '') }}";
 
-    function updateOptions(selectedCategory) {
-        Object.keys(categoryGroups).forEach(category => {
-            categoryGroups[category].classList.toggle("d-none", category !== selectedCategory);
-        });
-
-        const activeOptions = categoryGroups[selectedCategory]?.querySelectorAll("option") || [];
-        membershipDuration.innerHTML = '<option value=""  selected>Select Duration</option>';
-        activeOptions.forEach(option => membershipDuration.appendChild(option.cloneNode(true)));
-
-        feesInput.value = '';
-        renewalDateInput.value = '';
-        membershipDuration.selectedIndex = 0;
+    // Function to handle default category selection and dropdown text
+    function setDefaultCategory() {
+        // Always default to atmiya_student if no selection exists
+        if (!document.querySelector('input[name="category"]:checked')) {
+            document.querySelector('input[name="category"][value="atmiya_student"]').checked = true;
+        }
+        
+        // Set default dropdown text for General Membership
+        const defaultOption = membershipDuration.querySelector('.default-option');
+        if (defaultOption) {
+            defaultOption.text = 'Select General Membership Duration';
+        }
+    }
+    
+    // Fix for blank dropdown: ensure the default option always exists and is visible
+    function ensureDefaultOption() {
+        // Check if default option exists
+        let defaultOption = membershipDuration.querySelector('.default-option');
+        if (!defaultOption) {
+            // If it doesn't exist, create it
+            defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.className = 'default-option';
+            defaultOption.style.display = 'block';
+            membershipDuration.insertBefore(defaultOption, membershipDuration.firstChild);
+        }
+        
+        // Always make sure it's visible
+        defaultOption.style.display = 'block';
+        defaultOption.hidden = false;
+        
+        // Update text based on selected category
+        const selectedCategory = document.querySelector('input[name="category"]:checked')?.value || 'atmiya_student';
+        let categoryLabel = "General Membership"; // Default
+        
+        if (selectedCategory === 'atmiya_staff') {
+            categoryLabel = "General Membership + Aerobic / Zomba";
+        } else if (selectedCategory === 'non_atmiya_staff') {
+            categoryLabel = "Personal Training";
+        }
+        
+        defaultOption.text = `Select ${categoryLabel} Duration`;
+        
+        // Select it if no other option is selected
+        if (!membershipDuration.value) {
+            defaultOption.selected = true;
+        }
     }
 
-    categoryRadios.forEach(radio => {
-        if (radio.value === oldCategory) {
-            radio.checked = true;
-            updateOptions(oldCategory);
+    // Function to filter dropdown options based on selected category
+    function filterMembershipOptions() {
+        const selectedCategory = document.querySelector('input[name="category"]:checked')?.value || 'atmiya_student';
+        
+        // Get category label for display
+        let categoryLabel = "";
+        if (selectedCategory === 'atmiya_student') {
+            categoryLabel = "General Membership";
+        } else if (selectedCategory === 'atmiya_staff') {
+            categoryLabel = "General Membership + Aerobic / Zomba";
+        } else if (selectedCategory === 'non_atmiya_staff') {
+            categoryLabel = "Personal Training";
         }
-        radio.addEventListener("change", function () {
-            updateOptions(this.value);
+        
+        // Fix for blank dropdown: ensure the default option always exists and is visible
+        ensureDefaultOption();
+        
+        // Hide all optgroups then show only the relevant one
+        document.getElementById('optgroup_atmiya_student').style.display = 'none';
+        document.getElementById('optgroup_atmiya_staff').style.display = 'none';
+        document.getElementById('optgroup_non_atmiya_staff').style.display = 'none';
+        document.getElementById('optgroup_' + selectedCategory).style.display = '';
+        
+        // Reset selection if it doesn't match the current category
+        const currentSelected = membershipDuration.options[membershipDuration.selectedIndex];
+        if (currentSelected && currentSelected.getAttribute('data-category') !== selectedCategory 
+            && !currentSelected.classList.contains('default-option')) {
+            membershipDuration.selectedIndex = 0;
+            feesInput.value = '';
+        }
+    }
+
+    // Initial setup - ensure there's always a default selection
+    if (!oldCategory || oldCategory.trim() === '') {
+        oldCategory = 'atmiya_student';
+        document.querySelector('input[name="category"][value="atmiya_student"]').checked = true;
+    } else {
+        const categoryInput = document.querySelector(`input[name="category"][value="${oldCategory}"]`);
+        if (categoryInput) { // Fixed syntax error here
+            categoryInput.checked = true;
+        } else {
+            // Fallback to default if somehow the value is invalid
+            document.querySelector('input[name="category"][value="atmiya_student"]').checked = true;
+        }
+    }
+    
+    // Apply default settings immediately on page load
+    setDefaultCategory();
+    ensureDefaultOption();
+    
+    // Apply filtering immediately
+    filterMembershipOptions();
+    
+    // Update when category changes
+    categoryRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            filterMembershipOptions();
+            // Reset fees when category changes
+            feesInput.value = '';
+            feesInput.placeholder = "Select Membership Duration";
         });
     });
 
+    // Original functions for fees calculation
     var feesData = @json($fees);
     var atmiyaStaffFeesData = @json($atmiyaStaffFees);
     var nonAtmiyaStaffFeesData = @json($nonAtmiyaStaffFees);
@@ -264,11 +336,25 @@
 
     function updateFees() {
         let selectedDuration = membershipDuration.value;
-        let feesAmount = allFees.find(fee => fee.membership_duration === selectedDuration)?.fees_amount || '';
+        if (selectedDuration) {
+            let feesAmount = allFees.find(fee => fee.membership_duration === selectedDuration)?.fees_amount || '';
+            feesInput.value = feesAmount;
+            if (!feesAmount) {
+                alert('No fee found for the selected membership duration.');
+            }
+        } else {
+            feesInput.value = '';
+            feesInput.placeholder = "Select Membership Duration";
+        }
+    }
 
-        feesInput.value = feesAmount;
-        if (!feesAmount && selectedDuration) {
-            alert('No fee found for the selected membership duration.');
+    function calculateEndDate() {
+        let selectedDuration = membershipDuration.value;
+        let joiningValue = joiningDateInput.value;
+        
+        if (joiningValue && selectedDuration) {
+            let newEndDate = calculateDate(joiningValue, selectedDuration);
+            endDateInput.value = newEndDate;
         }
     }
 
@@ -289,35 +375,66 @@
         return date.toISOString().split('T')[0];
     }
 
-    function updateRenewalDate() {
-    let selectedDuration = membershipDuration.value;
-    let endDate = endDateInput.value;
-
-    if (endDate && selectedDuration) {
-        let renewalDate = calculateDate(endDate, selectedDuration);
-        renewalDateInput.value = renewalDate;
-        endDateInput.value = renewalDate; 
-    }
-}
-
-
-    if (oldMembershipDuration) {
-        membershipDuration.value = oldMembershipDuration;
-        updateFees();
-    }
-    if (oldFees) {
-        feesInput.value = oldFees;
-    }
-
-    joiningDateInput.value = new Date().toISOString().split('T')[0];
-
+    // Update end date when membership duration or joining date changes
     membershipDuration.addEventListener("change", function () {
         updateFees();
-        updateRenewalDate();
+        calculateEndDate();
     });
 
-    endDateInput.addEventListener("change", function () {
-        updateRenewalDate();
+    joiningDateInput.addEventListener("change", function () {
+        calculateEndDate();
+    });
+
+    // Ensure default option shows "Select Duration" text
+    function ensureDefaultOption() {
+        // Check if default option exists
+        let defaultOption = membershipDuration.querySelector('.default-option');
+        if (!defaultOption) {
+            // If it doesn't exist, create it
+            defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.className = 'default-option';
+            defaultOption.style.display = 'block';
+            membershipDuration.insertBefore(defaultOption, membershipDuration.firstChild);
+        }
+        
+        // Always make sure it's visible
+        defaultOption.style.display = 'block';
+        defaultOption.hidden = false;
+        
+        // Update text based on selected category
+        const selectedCategory = document.querySelector('input[name="category"]:checked')?.value || 'atmiya_student';
+        let categoryLabel = "General Membership"; // Default
+        
+        if (selectedCategory === 'atmiya_staff') {
+            categoryLabel = "General Membership + Aerobic / Zomba";
+        } else if (selectedCategory === 'non_atmiya_staff') {
+            categoryLabel = "Personal Training";
+        }
+        
+        defaultOption.text = `Select ${categoryLabel} Duration`;
+        
+        // Select it if no other option is selected
+        if (!membershipDuration.value) {
+            defaultOption.selected = true;
+        }
+    }
+
+    // Run necessary setup when the page loads
+    window.addEventListener('load', function() {
+        setDefaultCategory();
+        ensureDefaultOption();
+        
+        // Force clear fees if no duration selected
+        if (!membershipDuration.value || membershipDuration.selectedIndex === 0) {
+            feesInput.value = '';
+            feesInput.placeholder = "Select Membership Duration";
+        }
+        
+        // Calculate end date if we have joining date and membership duration
+        if (joiningDateInput.value && membershipDuration.value) {
+            calculateEndDate();
+        }
     });
 
     $(document).ready(function () {
@@ -331,6 +448,5 @@
         });
     });
 });
-
 </script>
 @endsection

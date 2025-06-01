@@ -17,8 +17,6 @@ return new class extends Migration {
             $table->string('membership_duration');
             $table->string('category');
             $table->string('contact_no');
-            $table->string('department');
-            $table->string('semester');
             $table->decimal('fees', 10, 2); 
             $table->string('payment_mode');
             $table->date('joining_date');

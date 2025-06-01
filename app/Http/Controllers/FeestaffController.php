@@ -9,7 +9,7 @@ class FeestaffController extends Controller
 {
     public function index()
     {
-        $title = 'Fees - Atmiya Staff';
+        $title = 'Fees';
 
         $fees = AtmiyaStaffFee::all();
         return view('admin.fees-staff.index', compact('title', 'fees'));
@@ -33,7 +33,7 @@ class FeestaffController extends Controller
     public function edit($id)
     {
         $fee = AtmiyaStaffFee::findOrFail($id);
-        $title = 'Edit Fees - Atmiya Staff';
+        $title = 'Edit Fees';
         return view('admin.fees-staff.edit', compact('title', 'fee'));
     }
 

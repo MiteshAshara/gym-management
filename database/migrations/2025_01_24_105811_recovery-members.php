@@ -15,9 +15,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('image')->nullable();
             $table->string('membership_duration');
-            $table->string('contact_no');
-            $table->string('department');
-            $table->string('semester');
+            $table->string('contact_no')->unique();
             $table->string('category');    
             $table->decimal('fees', 10, 2); 
             $table->string('payment_mode');

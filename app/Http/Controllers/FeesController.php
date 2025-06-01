@@ -30,8 +30,9 @@ class FeesController extends Controller
     }
     public function edit($id)
     {
+        $title='Edit Fees';
         $fee = Fees::findOrFail($id);
-        return view('admin.fees.edit', compact('fee'));
+        return view('admin.fees.edit', compact('fee','title'));
     }
     public function update(Request $request, $id)
     {

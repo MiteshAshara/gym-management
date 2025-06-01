@@ -13,26 +13,51 @@ class ReneableController extends Controller
 {
     public function index()
     {
-        $title = "Upcoming Renewable Members";
-
-        $today = now();
-        $sevenDaysLater = now()->addDays(7);
-
-        $members = Member::whereBetween('end_date', [$today, $sevenDaysLater])
-            ->orderBy('end_date')
-            ->get();
-
-        return view('admin.reneable.index', compact('title', 'members'));
+        $title = 'Upcoming Renewable';
+        $currentDate = \Carbon\Carbon::now()->startOfDay();
+        $endOfToday = \Carbon\Carbon::now()->endOfDay();
+        $oneWeekFromNow = $currentDate->copy()->addDays(7);
+        
+        // Get all members regardless of renewal date
+        $members = Member::orderBy('end_date', 'asc')->get();
+        
+        // Fixed count for today's renewals - using a more precise date range
+        $todayRenewals = Member::whereBetween('end_date', [
+            $currentDate->toDateString()." 00:00:00", 
+            $currentDate->toDateString()." 23:59:59"
+        ])->count();
+        
+        $thisWeekRenewals = Member::whereBetween('end_date', [
+            $currentDate->toDateString(),
+            $currentDate->copy()->addDays(7)->toDateString()
+        ])->count();
+        
+        $thisMonthRenewals = Member::whereBetween('end_date', [
+            $currentDate->toDateString(),
+            $currentDate->copy()->endOfMonth()->toDateString()
+        ])->count();
+        
+        $totalRenewals = Member::count();
+        
+        return view('admin.reneable.index', compact(
+            'members', 
+            'title',
+            'todayRenewals',
+            'thisWeekRenewals',
+            'thisMonthRenewals',
+            'totalRenewals'
+        ));
     }
 
     public function edit($id)
     {
+        $title = "Renewable Members";
         $member = Member::findOrFail($id);
         $fees = Fees::all();
         $atmiyaStaffFees = AtmiyaStaffFee::all();
         $nonAtmiyaStaffFees = NonAtmiyaStaffFee::all();
 
-        return view('admin.reneable.edit', compact('member', 'fees', 'atmiyaStaffFees', 'nonAtmiyaStaffFees'));
+        return view('admin.reneable.edit', compact('member', 'fees', 'atmiyaStaffFees', 'nonAtmiyaStaffFees', 'title'));
     }
 
     public function update(Request $request, $id)
@@ -40,8 +65,6 @@ class ReneableController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'contact_no' => 'required|string|max:10',
-            'department' => 'required|string|max:255',
-            'semester' => 'required|string|max:255',
             'membership_duration' => 'required|string',
             'payment_mode' => 'required|string',
             'joining_date' => 'required|date',
@@ -52,8 +75,6 @@ class ReneableController extends Controller
         $member = Member::findOrFail($id);
         $member->name = $request->name;
         $member->contact_no = $request->contact_no;
-        $member->department = $request->department;
-        $member->semester = $request->semester;
         $member->membership_duration = $request->membership_duration;
         $member->payment_mode = $request->payment_mode;
         $member->joining_date = $request->joining_date;

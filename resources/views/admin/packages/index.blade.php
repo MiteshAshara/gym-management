@@ -664,3 +664,63 @@
   }
 </script>
 @endsection
+
+<!-- Male Packages -->
+@if($category == 'all' || $category == 'male')
+<h3 class="section-title">General Membership Packages</h3>
+<div class="row">
+  @foreach($members as $member)
+    @if($member->category == 'atmiya_student' || $member->category == 'non_atmiya_staff')
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card package-card shadow-sm">
+          <div class="card-body text-center">
+            <h5 class="card-title font-weight-bold">{{ $member->name }}</h5>
+            <p class="card-text text-muted">{{ $member->description }}</p>
+            <div class="package-price mb-3">
+              @if($member->discount_price)
+                <span class="text-danger font-weight-bold">{{ $member->discount_price }} ₹</span>
+                <span class="text-muted text-decoration-line-through">{{ $member->regular_price }} ₹</span>
+              @else
+                <span class="text-primary font-weight-bold">{{ $member->regular_price }} ₹</span>
+              @endif
+            </div>
+            <a href="{{ route('member.edit', $member->id) }}" class="btn btn-primary btn-sm">
+              <i class="fas fa-edit"></i> Edit Package
+            </a>
+          </div>
+        </div>
+      </div>
+    @endif
+  @endforeach
+</div>
+@endif
+
+<!-- Female Packages -->
+@if($category == 'all' || $category == 'female')
+<h3 class="section-title mt-5">General Membership + Aerobics/Zumba Packages</h3>
+<div class="row">
+  @foreach($members as $member)
+    @if($member->category == 'atmiya_staff')
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card package-card shadow-sm">
+          <div class="card-body text-center">
+            <h5 class="card-title font-weight-bold">{{ $member->name }}</h5>
+            <p class="card-text text-muted">{{ $member->description }}</p>
+            <div class="package-price mb-3">
+              @if($member->discount_price)
+                <span class="text-danger font-weight-bold">{{ $member->discount_price }} ₹</span>
+                <span class="text-muted text-decoration-line-through">{{ $member->regular_price }} ₹</span>
+              @else
+                <span class="text-primary font-weight-bold">{{ $member->regular_price }} ₹</span>
+              @endif
+            </div>
+            <a href="{{ route('member.edit', $member->id) }}" class="btn btn-primary btn-sm">
+              <i class="fas fa-edit"></i> Edit Package
+            </a>
+          </div>
+        </div>
+      </div>
+    @endif
+  @endforeach
+</div>
+@endif

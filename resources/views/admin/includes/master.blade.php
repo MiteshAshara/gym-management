@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="{{ URL::to('/admin/plugins/fontawesome-free/css/all.min.css') }}">
-    <link rel="icon" class="bg-white" sizes="64x64" type="image/png" href="{{ asset('admin/dist/img/au-favicon.png') }}">
+    <link rel="icon" class="bg-white" sizes="64x64" type="image/png" href="https://static.vecteezy.com/system/resources/thumbnails/017/504/043/small_2x/bodybuilding-emblem-and-gym-logo-design-template-vector.jpg">
     <link rel="stylesheet" href="{{ URL::to('/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
     <link rel="stylesheet" href="{{ URL::to('/admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ URL::to('/admin/plugins/jqvmap/jqvmap.min.css') }}">
@@ -56,6 +56,9 @@
         });
         $(document).ready(function () {
             $('#feesTable').DataTable();
+        });
+        $(document).ready(function () {
+            $('#inquiryTable').DataTable();
         });
     </script>
 </body>

@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Atmiya Wellness | Login</title>
-  <link rel="icon" class="bg-white" sizes="64x64" type="image/png" href="{{ asset('admin/dist/img/au-favicon.png') }}">
+  <title>Fitness Gym | Login</title>
+  <link rel="icon" class="bg-white" sizes="64x64" type="image/png" href="https://static.vecteezy.com/system/resources/thumbnails/017/504/043/small_2x/bodybuilding-emblem-and-gym-logo-design-template-vector.jpg">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -14,7 +14,8 @@
     crossorigin="anonymous"></script>
   <style>
     body {
-      background: linear-gradient(to bottom right, #007bff, #28a745);
+      /* background: linear-gradient(to bottom right, #007bff, #28a745); */
+      background: linear-gradient(to bottom right, #7f00ff, #28a745);
       font-family: 'Arial', sans-serif;
       min-height: 100vh;
       display: flex;
@@ -144,10 +145,10 @@
   <section class="py-3">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+        <div class="col-md-12">
           <div class="card login-card mt-4">
             <div class="card-header">
-              <img src="{{ asset('admin/dist/img/au-logo.png') }}" alt="User Logo" class="img-fluid">
+              <img src="https://static.vecteezy.com/system/resources/thumbnails/017/504/043/small_2x/bodybuilding-emblem-and-gym-logo-design-template-vector.jpg" alt="User Logo" class="img-fluid">
               <h4 class="mt-3">Admin Login</h4>
             </div>
             <div class="card-body p-4">
@@ -203,7 +204,7 @@
               </form>
             </div>
             <div class="card-footer">
-              <p class="m-0 text-secondary">Atmiya Wellness &copy; 2025</p>
+              <p class="m-0 text-secondary">All Rights Reserved &copy; 2025</p>
             </div>
           </div>
         </div>

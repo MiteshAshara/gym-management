@@ -16,51 +16,51 @@ class RecoverMember extends Controller
         return view('admin.recovery-member.index', compact('members', 'title'));
     }
 
-    public function recover($id, Request $request)
+    public function recover($id)
     {
         $recoveryMember = RecoveryMember::findOrFail($id);
+        $newImagePath = null;
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'contact_no' => 'required|string|max:15|regex:/^\d{10}$/',
-            'department' => 'required|string|max:255',
-            'semester' => 'required|string|max:50',
-            'fees' => 'required|string',
-            'payment_mode' => 'required|string|max:50',
-            'joining_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:joining_date',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:8048',
-            'membership_duration' => 'required|string',
-            'category' => 'required|string',
-        ]);
+        // Check if the image exists
+        if ($recoveryMember->image && file_exists(public_path($recoveryMember->image))) {
+            $originalImageName = basename($recoveryMember->image);
+            $newImageDir = 'images/members/';
+            $newImagePath = $newImageDir . $originalImageName;
 
-        $imagePath = null;
-        if ($request->hasFile('image')) {
+            $sourcePath = public_path($recoveryMember->image);
+            $destinationPath = public_path($newImagePath);
 
-            $imageName = strtolower(str_replace(' ', '_', $request->name)) . '_' . time() . '.' . $request->image->extension();
+            // Create the members directory if it doesn't exist
+            if (!file_exists(public_path($newImageDir))) {
+                mkdir(public_path($newImageDir), 0777, true);
+            }
 
-            $imagePath = $request->file('image')->storeAs('members', $imageName, 'public');
-        } else {
-
-            $imagePath = $recoveryMember->image;
+            // Move image from recovery-member to members
+            if (rename($sourcePath, $destinationPath)) {
+                // Success, image moved and path updated
+            } else {
+                // In case rename fails, fallback to null
+                $newImagePath = null;
+            }
         }
 
+        // Create a new Member record
         Member::create([
-            'name' => $request->name,
-            'contact_no' => $request->contact_no,
-            'department' => $request->department,
-            'semester' => $request->semester,
-            'fees' => $request->fees,
-            'payment_mode' => $request->payment_mode,
-            'joining_date' => $request->joining_date,
-            'end_date' => $request->end_date,
-            'image' => $imagePath,
-            'membership_duration' => $request->membership_duration,
-            'category' => $request->category,
+            'name' => $recoveryMember->name,
+            'contact_no' => $recoveryMember->contact_no,
+            'fees' => $recoveryMember->fees,
+            'payment_mode' => $recoveryMember->payment_mode,
+            'joining_date' => $recoveryMember->joining_date,
+            'end_date' => $recoveryMember->end_date,
+            'image' => $newImagePath,
+            'membership_duration' => $recoveryMember->membership_duration,
+            'category' => $recoveryMember->category,
         ]);
 
+        // Delete the record from recovery table
         $recoveryMember->delete();
 
-        return redirect()->route('recovery.member')->with('success', 'Member Data Recovered.');
+        return redirect()->route('recovery.member')->with('success', 'Member successfully recovered!');
     }
+
 }

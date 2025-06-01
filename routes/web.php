@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FeesController;
 use App\Http\Controllers\FeesStructureController;
 use App\Http\Controllers\FeestaffController;
@@ -10,12 +9,20 @@ use App\Http\Controllers\NonAtmiyaStaffFeeController;
 use App\Http\Controllers\RecoverMember;
 use App\Http\Controllers\RecoveryMember;
 use App\Http\Controllers\ReneableController;
+use App\Http\Controllers\InquiryController;
+use App\Http\Controllers\PublicInquiryController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [AuthController::class, 'index'])->name('/');
+// Route::get('/', [AuthController::class, 'index'])->name('/');
+
+// Public routes for inquiry form
+Route::get('/public-inquiry', [PublicInquiryController::class, 'showForm'])->name('public.inquiry.form');
+Route::post('/public-inquiry', [PublicInquiryController::class, 'store'])->name('public.inquiry.store');
+Route::get('/public-inquiry/success', [PublicInquiryController::class, 'success'])->name('public.inquiry.success');
+Route::get('/', [PublicInquiryController::class, 'generateQrCode'])->name('public.inquiry.qr');
 
 //admin
-Route::prefix('atmiya-admin')->group(function () {
+Route::prefix('admin')->group(function () {
     Route::get('/login', [AuthController::class, 'index'])->name('admin.login');
     Route::post('/post-login', [AuthController::class, 'postLogin'])->name('admin.login.post');
     Route::get('/register', [AuthController::class, 'registration'])->name('admin.register');
@@ -62,17 +69,24 @@ Route::prefix('atmiya-admin')->group(function () {
         Route::post('/update/{id}', [ReneableController::class, 'update'])->name('reneable.update');
         Route::get('/members/pdf', [MemberController::class, 'exportPDF'])->name('members.pdf');
 
-        // recovery member
-        // Route::get('/recover-member', [RecoverMember::class, 'index'])->name('recovery.member');
-        // Route::post('/recover-member/{id}', [RecoverMember::class, 'recover'])->name('recover.member');
+        //inquiry 
+        Route::get('/inquiries', [InquiryController::class, 'index'])->name('inquiries');
+        Route::post('/inquiries', [InquiryController::class, 'store'])->name('inquiries.store');
+        Route::get('/inquiries/edit/{id}', [InquiryController::class, 'edit'])->name('inquiries.edit');
+        Route::put('/inquiries/{id}', [InquiryController::class, 'update'])->name('inquiries.update');
+        Route::delete('/inquiries/{id}', [InquiryController::class, 'destroy'])->name('inquiries.destroy');
+        Route::patch('/inquiries/{id}/confirm', [InquiryController::class, 'confirm'])->name('inquiries.confirm');
+        Route::get('/inquiries/{id}/to-member', [MemberController::class, 'createFromInquiry'])->name('inquiries.to-member');
+        Route::patch('/inquiries/{id}/set-cold', [InquiryController::class, 'setCold'])->name('inquiries.set-cold');
+        Route::patch('/inquiries/{id}/toggle-cold', [InquiryController::class, 'toggleCold'])->name('inquiries.toggle-cold');
 
-        //     <li class="nav-item">
-        //     <a class="nav-link {{ request()->routeIs('recovery.member') ? 'active' : '' }} fas fa-undo-alt"
-        //     href="{{ route('recovery.member') }}">
-        //     <p>Recovery Member</p>
-        //     </a>
-        //   </li>
+        // recovery member
+        Route::get('/recover-member', [RecoverMember::class, 'index'])->name('recovery.member');
+        Route::post('/recover-member/{id}', [RecoverMember::class, 'recover'])->name('recover.member');
+        
     });
 });
 
-
+// Add this with your other routes
+Route::get('/api/inquiries-stats', [App\Http\Controllers\ApiController::class, 'getInquiriesStats'])->name('api.inquiries-stats');
+Route::get('/api/inquiries-trends', [App\Http\Controllers\ApiController::class, 'getInquiriesTrends'])->name('api.inquiries-trends');

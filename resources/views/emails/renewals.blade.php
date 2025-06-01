@@ -87,7 +87,7 @@
                 free to contact our support team.</p>
         </div>
         <div class="email-footer">
-            <p class="fw-bold">Atmiya Wellness Center</p>
+            <p class="fw-bold">Fitness Gym Center</p>
         </div>
     </div>
 </body>
