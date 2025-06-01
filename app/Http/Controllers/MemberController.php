@@ -209,23 +209,43 @@ class MemberController extends Controller
             }
         }
 
-        // Save data to RecoveryMember table
-        RecoveryMember::create([
-            'name' => $member->name,
-            'image' => $imagePath,
-            'contact_no' => $member->contact_no,
-            'membership_duration' => $member->membership_duration,
-            'fees' => $member->fees,
-            'category' => $member->category,
-            'payment_mode' => $member->payment_mode,
-            'joining_date' => $member->joining_date,
-            'end_date' => $member->end_date,
-        ]);
-
-        // Delete the member record from main table
-        $member->delete();
-
-        return redirect()->route('member')->with('success', 'Member deleted successfully!');
+        try {
+            // Save all data to RecoveryMember table with detailed error reporting
+            $recoveryData = [
+                'name' => $member->name,
+                'image' => $imagePath,
+                'contact_no' => $member->contact_no,
+                'membership_duration' => $member->membership_duration,
+                'fees' => $member->fees,
+                'category' => $member->category,
+                'payment_mode' => $member->payment_mode,
+                'joining_date' => $member->joining_date,
+                'end_date' => $member->end_date,
+                'age' => $member->age,
+                'birth_date' => $member->birth_date,
+                'height_in_inches' => $member->height_in_inches,
+                'weight' => $member->weight,
+                'current_status' => $member->current_status,
+                'reference' => $member->reference,
+                'medical_conditions' => $member->medical_conditions,
+                // Use the gender from category as fallback if no direct gender field exists
+                'gender' => $member->gender ?? ($member->category == 'atmiya_student' ? 'male' : 
+                          ($member->category == 'atmiya_staff' ? 'female' : null)),
+            ];
+            
+            // Create recovery record with detailed error handling
+            $recovery = RecoveryMember::create($recoveryData);
+            
+            // Only delete the original record if the recovery record was created successfully
+            if ($recovery) {
+                $member->delete();
+                return redirect()->route('member')->with('success', 'Member deleted and backed up successfully!');
+            } else {
+                return redirect()->route('member')->with('error', 'Failed to create recovery backup. Member not deleted.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('member')->with('error', 'Error creating recovery backup: ' . $e->getMessage());
+        }
     }
 
 

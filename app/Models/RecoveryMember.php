@@ -19,5 +19,13 @@ class RecoveryMember extends Model
         'payment_mode',
         'joining_date',
         'end_date',
+        'age',
+        'birth_date',
+        'height_in_inches',
+        'weight',
+        'current_status',
+        'reference',
+        'medical_conditions',
+        'gender', // Added gender to fillable array
     ];
 }

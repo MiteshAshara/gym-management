@@ -44,23 +44,66 @@ class RecoverMember extends Controller
             }
         }
 
-        // Create a new Member record
-        Member::create([
-            'name' => $recoveryMember->name,
-            'contact_no' => $recoveryMember->contact_no,
-            'fees' => $recoveryMember->fees,
-            'payment_mode' => $recoveryMember->payment_mode,
-            'joining_date' => $recoveryMember->joining_date,
-            'end_date' => $recoveryMember->end_date,
-            'image' => $newImagePath,
-            'membership_duration' => $recoveryMember->membership_duration,
-            'category' => $recoveryMember->category,
-        ]);
+        try {
+            // Create a new Member record with all fields
+            $memberData = [
+                'name' => $recoveryMember->name,
+                'contact_no' => $recoveryMember->contact_no,
+                'fees' => $recoveryMember->fees,
+                'payment_mode' => $recoveryMember->payment_mode,
+                'joining_date' => $recoveryMember->joining_date,
+                'end_date' => $recoveryMember->end_date,
+                'image' => $newImagePath,
+                'membership_duration' => $recoveryMember->membership_duration,
+                'category' => $recoveryMember->category,
+                'age' => $recoveryMember->age,
+                'birth_date' => $recoveryMember->birth_date,
+                'height_in_inches' => $recoveryMember->height_in_inches,
+                'weight' => $recoveryMember->weight,
+                'current_status' => $recoveryMember->current_status,
+                'reference' => $recoveryMember->reference,
+                'medical_conditions' => $recoveryMember->medical_conditions,
+                'gender' => $recoveryMember->gender, // Added gender field
+            ];
+            
+            $member = Member::create($memberData);
+            
+            // Only delete the recovery record if the member record was created successfully
+            if ($member) {
+                $recoveryMember->delete();
+                return redirect()->route('recovery.member')->with('success', 'Member successfully recovered!');
+            } else {
+                return redirect()->route('recovery.member')->with('error', 'Failed to recover member.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('recovery.member')->with('error', 'Error recovering member: ' . $e->getMessage());
+        }
+    }
 
-        // Delete the record from recovery table
-        $recoveryMember->delete();
-
-        return redirect()->route('recovery.member')->with('success', 'Member successfully recovered!');
+    /**
+     * Fix missing gender for existing recovery members.
+     */
+    public function fixMissingData()
+    {
+        $members = RecoveryMember::whereNull('gender')->get();
+        $updated = 0;
+        
+        foreach ($members as $member) {
+            // Set gender based on category as fallback
+            if (!$member->gender) {
+                if ($member->category == 'atmiya_student') {
+                    $member->gender = 'male';
+                } elseif ($member->category == 'atmiya_staff') {
+                    $member->gender = 'female';
+                } else {
+                    $member->gender = 'other';
+                }
+                $member->save();
+                $updated++;
+            }
+        }
+        
+        return redirect()->route('recovery.member')->with('success', $updated . ' recovery members updated with gender data.');
     }
 
 }

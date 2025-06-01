@@ -99,16 +99,16 @@
 
                         <div class="col-md-6 mb-3">
                             <label for="current_status" class="form-label">Current Status</label>
-                            <input type="text" name="current_status" id="current_status" class="form-control" 
+                            <input type="text" name="current_status" id="current_status" class="form-control"
                                 placeholder="Member's current status" value="{{ old('current_status', $inquiry->current_status ?? '') }}">
                             @error('current_status')
                             <span class="text-dark">{{ $message }}</span>
                             @enderror
                         </div>
-                        
+
                         <div class="col-md-6 mb-3">
                             <label for="reference" class="form-label">Reference</label>
-                            <input type="text" name="reference" id="reference" class="form-control" 
+                            <input type="text" name="reference" id="reference" class="form-control"
                                 placeholder="Reference information" value="{{ old('reference', $inquiry->reference ?? '') }}">
                             @error('reference')
                             <span class="text-dark">{{ $message }}</span>
@@ -117,7 +117,7 @@
 
                         <div class="col-md-12 mb-3">
                             <label for="medical_conditions" class="form-label">Medical Conditions</label>
-                            <textarea name="medical_conditions" id="medical_conditions" class="form-control" 
+                            <textarea name="medical_conditions" id="medical_conditions" class="form-control"
                                 placeholder="Any medical conditions">{{ old('medical_conditions', $inquiry->medical_conditions ?? '') }}</textarea>
                             @error('medical_conditions')
                             <span class="text-dark">{{ $message }}</span>
@@ -268,7 +268,7 @@
                                 <th>Medical information</th>
                                 <th>Joining Date</th>
                                 <th>Ending Date</th>
-                                <th>Actions</th>
+                                <th>Required Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -288,7 +288,9 @@
                                 <td>{{ ucwords($member->name) }}</td>
                                 <td>{{ $member->contact_no }}</td>
                                 <td>{{ $member->age ?? 'N/A' }}</td>
-                                <td>{{ $member->birth_date ? date('d-m-Y', strtotime($member->birth_date)) : 'N/A' }}</td>
+                                <td style="white-space: nowrap;">
+                                    {{ $member->birth_date ? date('d-m-Y', strtotime($member->birth_date)) : 'N/A' }}
+                                </td>
                                 <td>{{ $member->current_status ?? 'N/A' }}</td>
                                 <td>{{ $member->payment_mode }}</td>
                                 <td>
@@ -297,7 +299,15 @@
                                 </td>
                                 <td>{{ $member->category == 'atmiya_student' ? 'Male' : ($member->category == 'atmiya_staff' ? 'Female' : 'Other') }}</td>
                                 <td>{{ $member->fees }}</td>
-                                <td>{{ $member->medical_conditions ?? 'N/A' }}</td>
+                                <td>
+                                    @if($member->medical_conditions)
+                                    <span title="{{ $member->medical_conditions }}">
+                                        {{ Str::limit($member->medical_conditions, 50) }}
+                                    </span>
+                                    @else
+                                    N/A
+                                    @endif
+                                </td>
                                 <td style="white-space: nowrap;">
                                     {{ date('d-m-Y', strtotime($member->joining_date)) }}
                                 </td>
@@ -356,7 +366,7 @@
             feesInput.placeholder = "Select Membership Duration";
             endDateInput.value = '';
         }
-        
+
         categoryRadios.forEach(radio => {
             radio.addEventListener("change", function() {
                 updateOptions(this.value);

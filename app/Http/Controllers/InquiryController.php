@@ -26,7 +26,7 @@ class InquiryController extends Controller
             'weight' => 'required|integer|min:1',
             'current_status' => 'required|string|max:255',
             'reference' => 'nullable|string|max:255',
-            'medical_conditions' => 'nullable|string',
+            'medical_conditions' => 'nullable|string', // Fix validation rule
             'status' => 'nullable|in:hot,cold,pending',
         ]);
 

@@ -31,7 +31,7 @@ class PublicInquiryController extends Controller
             'weight' => 'required|integer|min:30|max:1500',
             'current_status' => 'required|string|max:255', // Added validation
             'reference' => 'nullable|string|max:255', // Added validation
-            'medical_conditions' => 'nullable|text', // Added validation
+            'medical_conditions' => 'nullable|string', // Fix validation rule: changed from text to string
         ]);
 
         // Store the inquiry with all required fields
