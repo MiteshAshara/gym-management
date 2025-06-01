@@ -4,7 +4,6 @@
 <style>
     .form-check-input {
         border: 2px solid black;
-
     }
 
     .form-check-input:checked {
@@ -64,7 +63,7 @@
                         <div class="col-md-6 mb-3">
                             <label for="age" class="form-label">Age</label>
                             <input type="number" name="age" id="age" class="form-control" placeholder="Enter Age"
-                                value="{{ old('age', $inquiry->age ?? '') }}">
+                                value="{{ old('age', $inquiry->age ?? '') }}" min="1" max="100">
                             @error('age')
                             <span class="text-dark">{{ $message }}</span>
                             @enderror
@@ -90,6 +89,42 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
+                            <label for="birth_date" class="form-label">Birth Date</label>
+                            <input type="date" name="birth_date" id="birth_date" class="form-control"
+                                value="{{ old('birth_date', $inquiry->birth_date ?? '') }}">
+                            @error('birth_date')
+                            <span class="text-dark">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="current_status" class="form-label">Current Status</label>
+                            <input type="text" name="current_status" id="current_status" class="form-control" 
+                                placeholder="Member's current status" value="{{ old('current_status', $inquiry->current_status ?? '') }}">
+                            @error('current_status')
+                            <span class="text-dark">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="reference" class="form-label">Reference</label>
+                            <input type="text" name="reference" id="reference" class="form-control" 
+                                placeholder="Reference information" value="{{ old('reference', $inquiry->reference ?? '') }}">
+                            @error('reference')
+                            <span class="text-dark">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label for="medical_conditions" class="form-label">Medical Conditions</label>
+                            <textarea name="medical_conditions" id="medical_conditions" class="form-control" 
+                                placeholder="Any medical conditions">{{ old('medical_conditions', $inquiry->medical_conditions ?? '') }}</textarea>
+                            @error('medical_conditions')
+                            <span class="text-dark">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Member Category</label>
                             <div class="d-flex gap-3">
                                 <div class="form-check">
@@ -107,7 +142,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="category" id="non_atmiya_staff"
                                         value="non_atmiya_staff" {{ old('category') == 'non_atmiya_staff' ? 'checked' : '' }} required>
-                                    <label class="form-check-label" for="non_atmiya_staff">Personal Traning</label>
+                                    <label class="form-check-label" for="non_atmiya_staff">Personal Training</label>
                                 </div>
                             </div>
                             @error('category')
@@ -115,49 +150,35 @@
                             @enderror
                         </div>
 
-
                         <div class="col-md-6 mb-3">
                             <label for="membership_duration" class="form-label">Membership Duration</label>
                             <select name="membership_duration" id="membership_duration" class="form-control">
                                 <option value="" disabled selected required>Select Duration</option>
 
-
                                 <optgroup label="Male" class="category-group" id="atmiya_student_options">
                                     @foreach($fees as $fee)
-                                    <option value="{{ $fee->membership_duration }}">{{ $fee->membership_duration }}
-                                    </option>
+                                    <option value="{{ $fee->membership_duration }}">{{ $fee->membership_duration }}</option>
                                     @endforeach
                                 </optgroup>
-
 
                                 <optgroup label="Female" class="category-group d-none" id="atmiya_staff_options">
                                     @foreach($atmiyaStaffFees as $atmiyaStaffFee)
-                                    <option value="{{ $atmiyaStaffFee->membership_duration }}">
-                                        {{ $atmiyaStaffFee->membership_duration }}
-                                    </option>
+                                    <option value="{{ $atmiyaStaffFee->membership_duration }}">{{ $atmiyaStaffFee->membership_duration }}</option>
                                     @endforeach
                                 </optgroup>
 
-
-                                <optgroup label="Other" class="category-group d-none"
-                                    id="non_atmiya_staff_options">
+                                <optgroup label="Other" class="category-group d-none" id="non_atmiya_staff_options">
                                     @foreach($nonAtmiyaStaffFees as $nonAtmiyaStaffFee)
-                                    <option value="{{ $nonAtmiyaStaffFee->membership_duration }}">
-                                        {{ $nonAtmiyaStaffFee->membership_duration }}
-                                    </option>
+                                    <option value="{{ $nonAtmiyaStaffFee->membership_duration }}">{{ $nonAtmiyaStaffFee->membership_duration }}</option>
                                     @endforeach
                                 </optgroup>
                             </select>
                         </div>
 
-
                         <div class="col-md-6 mb-3">
                             <label for="fees" class="form-label">Fees Amount</label>
-                            <input type="text" name="fees" id="fees" class="form-control" placeholder="Membership Fees"
-                                readonly>
+                            <input type="text" name="fees" id="fees" class="form-control" placeholder="Select Membership Duration" readonly>
                         </div>
-
-
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Payment Mode</label>
@@ -171,8 +192,7 @@
                                 <div class="form-check form-check-inline">
                                     <input type="radio" name="payment_mode" id="payment_online" value="Online Payment"
                                         class="form-check-input custom-dark-radio" {{ old('payment_mode') == 'Online Payment' ? 'checked' : '' }} required>
-                                    <label for="payment_online" class="form-check-label">Online
-                                        Payment</label>
+                                    <label for="payment_online" class="form-check-label">Online Payment</label>
                                 </div>
                             </div>
                             @error('payment_mode')
@@ -188,9 +208,7 @@
                             @enderror
                         </div>
 
-
                         <div class="col-md-6 mb-3 d-flex flex-row gap-3">
-
                             <div class="mb-3 w-50">
                                 <label for="joining_date" class="form-label">Joining Date</label>
                                 <input type="date" name="joining_date" id="joining_date" class="form-control"
@@ -199,7 +217,6 @@
                                 <span class="text-dark">{{ $message }}</span>
                                 @enderror
                             </div>
-
 
                             <div class="mb-3 w-50">
                                 <label for="end_date" class="form-label">End Date</label>
@@ -212,7 +229,6 @@
                         </div>
                     </div>
 
-
                     <div class="d-flex justify-content-center">
                         <button type="submit"
                             class="btn btn-dark rounded-pill d-grid gap-2 col-6 mx-auto">Confirm Member</button>
@@ -221,7 +237,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="container-fluid mt-5">
         <div class="card shadow-lg">
@@ -243,6 +258,9 @@
                                 <th>Member Image</th>
                                 <th>Member Name</th>
                                 <th>Contact Number</th>
+                                <th>Age</th>
+                                <th>Birth Date</th>
+                                <th>Current Status</th>
                                 <th>Payment Mode</th>
                                 <th>Membership Duration</th>
                                 <th>Member Category</th>
@@ -268,21 +286,15 @@
                                 </td>
                                 <td>{{ ucwords($member->name) }}</td>
                                 <td>{{ $member->contact_no }}</td>
-                                <!-- <td>
-                                            <a href="https://api.whatsapp.com/send?phone={{ $member->contact_no }}&text=Hello%20{{ ucfirst($member->name) }}%2C%20Your%20subscription%20ends%20on%20{{ date('d-m-Y', strtotime($member->end_date)) }}.%20You%20are%20renewable."
-                                                class="hover-link" style="font-weight: 600; color: black;">
-                                                {{ $member->contact_no }}
-                                            </a>
-                                        </td> -->
-
+                                <td>{{ $member->age ?? 'N/A' }}</td>
+                                <td>{{ $member->birth_date ? date('d-m-Y', strtotime($member->birth_date)) : 'N/A' }}</td>
+                                <td>{{ $member->current_status ?? 'N/A' }}</td>
                                 <td>{{ $member->payment_mode }}</td>
                                 <td>
                                     {{ ucwords(explode(' ', $member->membership_duration)[0]) }}
                                     {{ (explode(' ', $member->membership_duration)[0] == 1) ? 'Month' : 'Months' }}
                                 </td>
-
                                 <td>{{ $member->category == 'atmiya_student' ? 'Male' : ($member->category == 'atmiya_staff' ? 'Female' : 'Other') }}</td>
-
                                 <td>{{ $member->fees }}</td>
                                 <td style="white-space: nowrap;">
                                     {{ date('d-m-Y', strtotime($member->joining_date)) }}
@@ -339,9 +351,10 @@
             selectBox.innerHTML = '<option value="" disabled selected>Select Duration</option>';
             activeOptions.forEach(option => selectBox.appendChild(option.cloneNode(true)));
             feesInput.value = '';
-
+            feesInput.placeholder = "Select Membership Duration";
             endDateInput.value = '';
         }
+        
         categoryRadios.forEach(radio => {
             radio.addEventListener("change", function() {
                 updateOptions(this.value);

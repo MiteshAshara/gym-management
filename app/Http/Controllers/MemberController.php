@@ -56,6 +56,11 @@ class MemberController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:8048',
             'membership_duration' => 'required|string',
             'category' => 'required|string',
+            'age' => 'nullable|integer|min:1|max:120',
+            'birth_date' => 'nullable|date',
+            'current_status' => 'nullable|string|max:255',
+            'reference' => 'nullable|string|max:255',
+            'medical_conditions' => 'nullable|string',
         ]);
 
         $imagePath = null;
@@ -80,6 +85,11 @@ class MemberController extends Controller
             'image' => $imagePath,
             'membership_duration' => $request->membership_duration,
             'category' => $request->category,
+            'age' => $request->age,
+            'birth_date' => $request->birth_date,
+            'current_status' => $request->current_status,
+            'reference' => $request->reference,
+            'medical_conditions' => $request->medical_conditions,
         ]);
 
         return redirect()->route('member')->with('success', 'Member added successfully.');
@@ -112,6 +122,11 @@ class MemberController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:8048',
             'membership_duration' => 'required|string',
             'category' => 'required|string',
+            'age' => 'nullable|integer|min:1|max:120',
+            'birth_date' => 'nullable|date',
+            'current_status' => 'nullable|string|max:255',
+            'reference' => 'nullable|string|max:255',
+            'medical_conditions' => 'nullable|string',
         ]);
 
 
@@ -161,6 +176,11 @@ class MemberController extends Controller
             'image' => $imagePath,
             'membership_duration' => $request->membership_duration,
             'category' => $request->category,
+            'age' => $request->age,
+            'birth_date' => $request->birth_date,
+            'current_status' => $request->current_status,
+            'reference' => $request->reference,
+            'medical_conditions' => $request->medical_conditions,
         ]);
 
         return redirect()->route('member')->with('success', 'Member updated successfully.');
