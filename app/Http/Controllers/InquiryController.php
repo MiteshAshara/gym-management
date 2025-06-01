@@ -21,12 +21,35 @@ class InquiryController extends Controller
             'mobile' => 'required|string|max:15|unique:inquiries,mobile',
             'gender' => 'required|in:male,female,other',
             'age' => 'required|integer|min:1',
+            'birth_date' => 'nullable|date', // Changed to nullable
             'height_in_inches' => 'required|integer|min:1',
             'weight' => 'required|integer|min:1',
-            'status' => 'required|in:hot,cold,pending',
+            'current_status' => 'required|string|max:255',
+            'reference' => 'nullable|string|max:255',
+            'medical_conditions' => 'nullable|string',
+            'status' => 'nullable|in:hot,cold,pending',
         ]);
 
-        Inquiry::create($request->all());
+        // Create data with defaults for missing required fields
+        $data = $request->all();
+        
+        // Set default birth_date if not provided
+        if (!isset($data['birth_date']) || empty($data['birth_date'])) {
+            $data['birth_date'] = date('Y-m-d');
+        }
+        
+        // Set default status if not provided
+        if (!isset($data['status']) || empty($data['status'])) {
+            $data['status'] = 'pending';
+        }
+        
+        // Set default current_status if not provided
+        if (!isset($data['current_status']) || empty($data['current_status'])) {
+            $data['current_status'] = 'other';
+        }
+
+        Inquiry::create($data);
+        
         return redirect()->route('inquiries')->with('success', 'Inquiry created successfully.');
     }
 
@@ -45,8 +68,12 @@ class InquiryController extends Controller
             'mobile' => 'required|string|max:15|unique:inquiries,mobile,' . $id,
             'gender' => 'required|in:male,female',
             'age' => 'required|integer|min:1',
+            'birth_date' => 'required|date', // Changed to required
             'height_in_inches' => 'required|integer|min:1',
             'weight' => 'required|integer|min:1',
+            'current_status' => 'required|string|max:255', // Added validation
+            'reference' => 'nullable|string|max:255', // Added validation
+            'medical_conditions' => 'nullable|string', // Added validation
             'status' => 'required|in:hot,cold,pending',
         ]);
 

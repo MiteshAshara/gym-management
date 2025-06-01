@@ -8,14 +8,18 @@ class Inquiry extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+     protected $fillable = [
         'name',
         'email',
+        'mobile',
         'gender',
         'age',
+        'birth_date',
         'height_in_inches',
         'weight',
-        'mobile',
+        'current_status',
+        'reference',
+        'medical_conditions',
         'status',
     ];
 }

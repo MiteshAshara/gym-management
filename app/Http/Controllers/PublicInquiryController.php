@@ -26,21 +26,27 @@ class PublicInquiryController extends Controller
             'mobile' => 'required|string|max:10|regex:/^\d{10}$/',
             'gender' => 'required|in:male,female',
             'age' => 'required|integer|min:8|max:99',
+            'birth_date' => 'required|date', // Added validation for birth_date
             'height_in_inches' => 'required|integer|min:26|max:1096',
             'weight' => 'required|integer|min:30|max:1500',
+            'current_status' => 'required|string|max:255', // Added validation
+            'reference' => 'nullable|string|max:255', // Added validation
+            'medical_conditions' => 'nullable|text', // Added validation
         ]);
 
-        // Store the inquiry with 'pending' status by default
+        // Store the inquiry with all required fields
         Inquiry::create([
             'name' => $request->name,
             'email' => $request->email,
             'mobile' => $request->mobile,
             'gender' => $request->gender,
             'age' => $request->age,
+            'birth_date' => $request->birth_date, // Added birth_date
             'height_in_inches' => $request->height_in_inches,
             'weight' => $request->weight,
-            'address' => $request->address,
-            'notes' => $request->notes,
+            'current_status' => $request->current_status, // Added current_status
+            'reference' => $request->reference, // Added reference
+            'medical_conditions' => $request->medical_conditions, // Added medical_conditions
             'status' => 'pending',
         ]);
 
